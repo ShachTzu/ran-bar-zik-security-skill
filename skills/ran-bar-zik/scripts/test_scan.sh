@@ -7,7 +7,7 @@
 # path and the grep path accept different regex dialects, and a pattern that
 # only one of them rejects is exactly the bug this file exists to catch.
 set -uo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit 1
 
 FIX=$(mktemp -d)
 trap 'rm -rf "$FIX"' EXIT

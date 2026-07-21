@@ -67,7 +67,7 @@ if command -v rg >/dev/null 2>&1; then
          -e "$1" -- "$TARGET"
     fi
   }
-  ENGINE=rg
+  ENGINE="rg"
 else
   _search() {
     if [ -n "$LIST" ]; then
@@ -79,7 +79,7 @@ else
         -e "$1" -- "$TARGET"
     fi
   }
-  ENGINE=grep
+  ENGINE="grep"
 fi
 
 BROKEN=0
