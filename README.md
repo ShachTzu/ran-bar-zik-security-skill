@@ -18,8 +18,8 @@ secure web development. Reports are in Hebrew by default, English on request.*
 ## התקנה
 
 ```bash
-git clone https://github.com/ShachTzu/ran-bar-zik-skill.git
-cp -r ran-bar-zik-skill/skills/ran-bar-zik ~/.claude/skills/
+git clone https://github.com/ShachTzu/ran-bar-zik-security-skill.git
+cp -r ran-bar-zik-security-skill/skills/ran-bar-zik ~/.claude/skills/
 ```
 
 לפרויקט בודד: `cp -r skills/ran-bar-zik .claude/skills/`
