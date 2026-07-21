@@ -1,0 +1,33 @@
+name: test
+
+# The scanner's regexes run under two engines with different dialects. A pattern
+# rejected by only one of them used to look like a clean category, so CI installs
+# ripgrep explicitly and test_scan.sh asserts both paths.
+on: [push, pull_request]
+
+jobs:
+  scan-self-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+      - name: Self-check (both engines)
+        run: bash skills/ran-bar-zik/scripts/test_scan.sh
+      - name: Shellcheck
+        run: |
+          sudo apt-get install -y shellcheck
+          shellcheck -S warning skills/ran-bar-zik/scripts/*.sh
+      - name: Scanner must not execute code from the repo it scans
+        run: |
+          set -e
+          D=$(mktemp -d); cd "$D"
+          git init -q -b main .; git config user.email t@t; git config user.name t
+          echo 'const a=1;' > base.js; git add -A; git commit -qm base
+          # a filename that ripgrep would parse as a command-executing flag
+          printf 'touch %s/PWNED\n' "$D" > payload.js
+          touch -- '--pre=sh'
+          git add -A; git commit -qm evil
+          bash "$GITHUB_WORKSPACE/skills/ran-bar-zik/scripts/scan.sh" --diff HEAD~1 || true
+          if [ -e "$D/PWNED" ]; then echo "RCE: scanner executed repo-controlled code"; exit 1; fi
+          echo "OK: no code execution"
