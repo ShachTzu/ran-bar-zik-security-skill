@@ -184,3 +184,23 @@ injection, שים safeguards על קלט ופלט, ואל תיתן לסוכן ה
 **רע:** `catch(e){ res.status(500).send(e.stack) }`, לוג של `req.body` עם סיסמה.
 **טוב:** שגיאה גנרית ללקוח + לוג פנימי מנוקה מסודות, מזעור נתונים, tokenization/הסתרה
 של PII בלוגים, ומדיניות שמירה/מחיקה ברורה.
+
+---
+
+## מקורות לכל דיבר
+
+לשימוש כשצריך לגבות ממצא בהפניה חיצונית בדוח. הפירוט המלא על מקור הדיברות —
+כולל ההבהרה שבר-זיק לא פרסם רשימה כזו — נמצא ב-README של הפרויקט.
+
+| דיבר | מקור |
+|---|---|
+| 1 | פרשת אלקטור (2020): מאגר בוחרים עם 6,453,254 ישראלים, נגיש דרך דפדפן בלבד — [ויקיפדיה](https://he.wikipedia.org/wiki/%D7%A8%D7%9F_%D7%91%D7%A8-%D7%96%D7%99%D7%A7) |
+| 2 | [OWASP A03:2021 — Injection](https://owasp.org/Top10/2021/A03_2021-Injection/) |
+| 3 | [OWASP A03:2021 — Injection](https://owasp.org/Top10/2021/A03_2021-Injection/) · [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html) |
+| 4 | [OWASP A01:2021 — Broken Access Control](https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/) |
+| 5 | [OWASP A05:2021 — Security Misconfiguration](https://owasp.org/Top10/2021/A05_2021-Security_Misconfiguration/) · [OWASP Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html) |
+| 6 | רן בר-זיק, [לא פרצו לנו, רק דלף לנו](https://internet-israel.com/פיתוח-אינטרנט/בניית-אתרי-אינטרנט-למפתחים/לא-פרצו-לנו-רק-דלף-לנו-לקחים-טכניים-מפר/) · [OWASP A01:2021](https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/) (CWE-200) |
+| 7 | [OWASP A02:2021 — Cryptographic Failures](https://owasp.org/Top10/2021/A02_2021-Cryptographic_Failures/) · [Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) |
+| 8 | [OWASP A06:2021 — Vulnerable and Outdated Components](https://owasp.org/Top10/2021/A06_2021-Vulnerable_and_Outdated_Components/) |
+| 9 | [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/) — LLM01 Prompt Injection, LLM05 Improper Output Handling |
+| 10 | [OWASP A09:2021 — Security Logging and Monitoring Failures](https://owasp.org/Top10/2021/A09_2021-Security_Logging_and_Monitoring_Failures/) · [תקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017](https://www.nevo.co.il/law_html/law00/144811.htm) |
