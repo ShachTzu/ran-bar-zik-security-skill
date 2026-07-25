@@ -41,6 +41,31 @@ cp -r ran-bar-zik-security-skill/skills/ran-bar-zik ~/.claude/skills/
 בלי ארגומנטים הסקילג בוחר יעד בעצמו: שינויים לא-מקומיטים ← דיף הענף מול `main`
 ← הקבצים הרגישים בפרויקט. הוא לא ישאל "מה לסקור?" לפני שניסה לגלות בעצמו.
 
+הדוח נכתב בשפת המשתמש — עברית או אנגלית. `SKILL.md` באנגלית; `SKILL_HE.md` היא
+הגרסה העברית המלאה.
+
+## שימוש בסוכני AI אחרים (Cursor / Codex / Gemini / Copilot ...)
+
+פורמט `SKILL.md` נטען אוטומטית רק במשפחת Claude, אבל **התוכן והסקריפט אינם
+תלויי-סוכן**. `adapters/security-rules.md` הוא גרסה מרוכזת של הכללים שמעתיקים
+לקובץ ההנחיות של כל סוכן:
+
+| סוכן | לאן להעתיק | נטען אוטומטית |
+|---|---|---|
+| Claude Code / Desktop / claude.ai | `.claude/skills/ran-bar-zik/` (הסקיל המלא) | ✅ |
+| Cursor | `.cursor/rules/ran-bar-zik.mdc` | ✅ |
+| Windsurf | `.windsurf/rules/ran-bar-zik.md` | ✅ |
+| GitHub Copilot | `.github/copilot-instructions.md` | ✅ |
+| OpenAI Codex / OpenCode | `AGENTS.md` (הוסף) | ✅ |
+| Gemini CLI | `GEMINI.md` | ✅ |
+| ChatGPT / Manus | הדבק כהנחיה מותאמת / prompt של פרויקט | ידני |
+
+הסורק `scripts/scan.sh` רץ עצמאית בכל shell — בלי סוכן בכלל:
+`bash scripts/scan.sh <path>`.
+
+*Works in any AI agent: copy `adapters/security-rules.md` into that agent's
+rules file (table above). The `scan.sh` scanner runs standalone in any shell.*
+
 ## עשרת הדיברות
 
 | # | הדיבר | תופס |
@@ -80,7 +105,8 @@ skills/ran-bar-zik/scripts/test_scan.sh
 
 ```
 skills/ran-bar-zik/
-├── SKILL.md                      # הפעולה הראשית, תת-פקודות, פורמט הדוח
+├── SKILL.md                      # הפעולה הראשית (אנגלית), תת-פקודות, פורמט הדוח
+├── SKILL_HE.md                   # הגרסה העברית המלאה
 ├── references/
 │   ├── commandments.md           # פירוט מלא + דוגמאות רע→טוב לכל דיבר
 │   ├── harden.md                 # CSP, headers, cookies, rate-limit, CI
@@ -88,6 +114,9 @@ skills/ran-bar-zik/
 └── scripts/
     ├── scan.sh                   # סורק דגלים אדומים
     └── test_scan.sh              # בדיקה עצמית
+
+adapters/
+└── security-rules.md             # גרסה ניידת לסוכנים שאינם Claude
 ```
 
 ## מגבלות

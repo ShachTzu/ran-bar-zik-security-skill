@@ -1,15 +1,16 @@
 ---
 name: ran-bar-zik
 description: >-
-  סקירת אבטחת-קוד לפי "עשרת הדיברות" של רן בר-זיק. Security code review against
-  Ran Bar-Zik's ten commandments. הפעל כאשר המשתמש כותב /ran-bar-zik (עם או בלי
-  ארגומנטים), או מבקש: "סקירת אבטחה", "בדוק אבטחה", "האם זה בטוח", "security
-  review", "review this for security", "check for XSS", "check for IDOR", "is
-  this secure", "audit this endpoint" — וכן לפני merge/deploy של קוד שנוגע
-  באימות, הרשאות, קלט משתמש, העלאת קבצים או מידע אישי. תת-פקודות: fix, xss,
-  idor, secrets, deps, privacy, llm, harden, explain, checklist, community.
-  אל תשתמש בזה לסריקת CVE בתלויות או לתאימות רגולטורית (השתמש ב-israeli-appsec-scanner),
-  ולא לסקירת קוד כללית של נכונות/באגים (השתמש ב-code-review).
+  Security code review against Ran Bar-Zik's ten commandments. סקירת אבטחת-קוד
+  לפי "עשרת הדיברות" של רן בר-זיק. Trigger when the user runs /ran-bar-zik (with
+  or without arguments), or asks: "security review", "review this for security",
+  "check for XSS", "check for IDOR", "is this secure", "audit this endpoint",
+  "סקירת אבטחה", "בדוק אבטחה", "האם זה בטוח" — and before any merge/deploy of
+  code touching auth, authorization, user input, file upload, or personal data.
+  Subcommands: fix, xss, idor, secrets, deps, privacy, llm, harden, explain,
+  checklist, community. Do NOT use for CVE/dependency scanning or regulatory
+  compliance (use israeli-appsec-scanner), nor for general correctness/bug
+  review (use code-review). Hebrew companion: SKILL_HE.md.
 metadata:
   display_name:
     he: סקירת אבטחה — עשרת הדיברות של רן בר-זיק
@@ -22,128 +23,148 @@ metadata:
     en: [security, code-review, appsec, xss, idor, privacy, owasp, israel, hebrew, llm-safety]
 ---
 
-# עשרת הדיברות לפי רן בר-זיק — סוקר אבטחה
+# Ran Bar-Zik's Ten Commandments — Security Reviewer
 
-בצע סקירת אבטחה של קוד מול עשרת הדיברות. העיקרון המנחה: **"כלי הפריצה הוא
-הדפדפן"** — כל מה שנשלח ללקוח גלוי וניתן לעריכה ב-F12.
+Run a security code review against the ten commandments. Guiding principle:
+**"the browser is the attacker's tool"** — anything sent to the client is
+visible and editable in F12. (Hebrew version: `SKILL_HE.md`.)
 
-**שפה:** כתוב את הדוח בשפת המשתמש. אם המשתמש כותב באנגלית — כל הדוח באנגלית,
-כולל שמות השדות ("Verdict:", "Reviewed:", "Findings:") ושמות הדיברות. אל תערבב.
+**Language:** write the report in the user's language. If the user writes in
+Hebrew, the whole report is in Hebrew, including field names and commandment
+names. Don't mix languages.
 
-## שלב 1 — בחר יעד
+## Step 1 — pick a target
 
-`/ran-bar-zik` **תמיד מבצע סקירה**. אל תשאל "מה לסקור?" לפני שניסית לגלות בעצמך.
+`/ran-bar-zik` **always reviews something**. Don't ask "what should I review?"
+before trying to find it yourself.
 
-יש ארגומנט? הוא היעד: נתיב לקובץ/תיקייה · `pr <n>` (הרץ `gh pr diff <n>`) ·
-sha/branch (הרץ `git diff <ref>`) · קטע קוד מודבק · `all`/`repo` לכל הקוד.
+Argument given? That's the target: a file/dir path · `pr <n>` (run
+`gh pr diff <n>`) · sha/branch (run `git diff <ref>`) · a pasted snippet ·
+`all`/`repo` for the whole codebase.
 
-**אין ארגומנט? עבור בסדר הזה ועצור בראשון שמחזיר משהו:**
+**No argument? Go in this order and stop at the first that returns something:**
 
-1. `git diff` — שינויים לא-מקומיטים.
-2. `git diff main...HEAD` (או `master`) — הדיף של הענף.
-3. הקבצים הרגישים בפרויקט: routes/endpoints, auth, מודלים, טפסים, קונפיג.
+1. `git diff` — uncommitted changes.
+2. `git diff main...HEAD` (or `master`) — the branch diff.
+3. The project's sensitive files: routes/endpoints, auth, models, forms, config.
 
-רק אם כל השלושה ריקים ואין קטע מודבק — בקש מהמשתמש להצביע על משהו.
+Only if all three are empty and nothing was pasted — ask the user to point at
+something.
 
-## שלב 2 — סרוק דגלים אדומים
+## Step 2 — scan for red flags
 
-אתר את `scan.sh` והרץ אותו על היעד. הנתיב אינו ידוע מראש — חפש אותו:
+Locate `scan.sh` and run it against the target. The path isn't known up front —
+search for it:
 
 ```bash
 SCAN=$(ls ~/.claude/skills/ran-bar-zik/scripts/scan.sh \
           .claude/skills/ran-bar-zik/scripts/scan.sh 2>/dev/null | head -1)
-[ -n "$SCAN" ] && bash "$SCAN" <נתיב>        # או: bash "$SCAN" --diff [ref]
+[ -n "$SCAN" ] && bash "$SCAN" <path>        # or: bash "$SCAN" --diff [ref]
 ```
 
-לא נמצא? הרץ `find ~/.claude ~/.claude/plugins . -name scan.sh -path '*ran-bar-zik*' 2>/dev/null | head -1`.
-עדיין לא? גרפ ידנית לפי הדגלים ב-`references/commandments.md` — אל תדלג על השלב.
+Not found? Run `find ~/.claude ~/.claude/plugins . -name scan.sh -path '*ran-bar-zik*' 2>/dev/null | head -1`.
+Still not? Grep manually by the flags in `references/commandments.md` — don't
+skip this step.
 
-הפלט הוא **לידים, לא ממצאים**. אם הסקריפט מדפיס `PATTERN FAILED` או יוצא עם 2 —
-הסריקה חלקית, אמור זאת בדוח.
+The output is **leads, not findings**. If the script prints `PATTERN FAILED` or
+exits with 2 — the scan is partial; say so in the report.
 
-## שלב 3 — קרא כל ליד בהקשר
+## Step 3 — read every lead in context
 
-ליד ללא הקשר הוא ניחוש. `innerHTML` על מחרוזת קבועה — לא ממצא. `findById(id)`
-בתוך פונקציה שכבר אימתה בעלות — לא ממצא. קרא את הקוד סביב, ואת
-`references/commandments.md` לפני שאתה נותן ציון.
+A lead without context is a guess. `innerHTML` on a constant string — not a
+finding. `findById(id)` inside a function that already verified ownership — not
+a finding. Read the surrounding code, and `references/commandments.md`, before
+you score anything.
 
-## שלב 4 — הכרע דיבר-דיבר
+## Step 4 — rule commandment by commandment
 
-לכל אחד מעשרת הדיברות: ✅ עומד / ⚠️ חשד / ❌ הפרה / ➖ לא רלוונטי.
+For each of the ten: ✅ pass / ⚠️ suspect / ❌ violation / ➖ not applicable.
 
-חומרה: 🔴 קריטי (ניצול מרחוק / חשיפת מידע אישי) · 🟠 גבוה · 🟡 בינוני · 🔵 הערה.
+Severity: 🔴 critical (remote exploit / personal-data exposure) · 🟠 high ·
+🟡 medium · 🔵 note.
 
-פסק דין: "עובר" / "עובר עם הסתייגויות" / "נכשל: תקן לפני deploy".
+Verdict: "pass" / "pass with reservations" / "fail: fix before deploy".
 
-### כללי ברזל
+### Iron rules
 
-- **אין תרחיש ניצול = אין ממצא.** כל ממצא חייב `קובץ:שורה` + תרחיש קונקרטי
-  ("תוקף משנה את `id` בבקשה ומקבל רשומה של משתמש אחר") + תיקון, רצוי כדיף.
-- **אל תמציא הפרות.** לא נראה בקוד → ➖. דוח קצר ואמיתי עדיף על ארוך ומנופח.
-- **⚠️ זה "בדוק את זה", לא "אתה פרוץ".** הפרד ודאי ממשוער.
-- **תיקון בשורש.** אותו כשל ב-5 מקומות → תקן ב-helper המשותף. גרפ את שאר
-  הקוראים לפני שאתה מציע תיקון נקודתי.
-- **מהירות לא קונה אבטחה.** אופטימיזציה שמעבירה נתונים או החלטות הרשאה לצד
-  הלקוח היא רגרסיה — אמור זאת גם אם המשתמש ביקש לזרז.
-- **PII ישראלי** (ת"ז, בריאות, ילדים, פרטי קשר) מוסדר בחוק הגנת הפרטיות —
-  חשיפה היא סיכון משפטי, לא רק באג. סמן 🔴.
+- **No exploit scenario = no finding.** Every finding needs `file:line` + a
+  concrete scenario ("attacker changes `id` in the request and gets another
+  user's record") + a fix, ideally as a diff.
+- **Don't invent violations.** Not visible in the code → ➖. A short, true report
+  beats a long, inflated one.
+- **⚠️ means "check this", not "you're breached".** Separate certain from
+  suspected.
+- **Fix at the root.** Same flaw in 5 places → fix the shared helper. Grep the
+  other callers before proposing a point fix.
+- **Speed doesn't buy security.** An optimization that moves data or
+  authorization decisions to the client is a regression — say so even if the
+  user asked to speed things up.
+- **Israeli PII** (national ID / ת"ז, health, children, contact details) is
+  regulated under the Privacy Protection Law — exposure is legal risk, not just
+  a bug. Mark 🔴.
 
-## תת-פקודות
+## Subcommands
 
-| פקודה | מה עושים |
+| Command | What it does |
 |---|---|
-| *(ברירת מחדל)* | סקירה מלאה, 10 הדיברות |
-| `fix` | סקירה, ואז תקן את 🔴/🟠 בקוד — כל תיקון בנפרד וניתן לביקורת |
-| `xss` `idor` `secrets` `deps` `privacy` `llm` `<מספר דיבר>` | סקירה ממוקדת בדיבר אחד (3/4/5/8/10/9), לעומק, כולל קוד שמחוץ לדיף |
-| `harden` | לא באגים אלא שכבות הגנה חסרות — לפי `references/harden.md` |
-| `explain <מספר>` | מצב לימוד: הסבר דיבר בודד עם דוגמאות רע→טוב. בלי סקירה |
-| `checklist` | פלוט צ'ק-ליסט markdown לתיוק ב-PR. בלי ניתוח |
-| `community` | סקירה עם הדגשים של אפליקציית קהילה (UGC + ייבוא CSV) — `references/community-app.md` |
+| *(default)* | Full review, all 10 commandments |
+| `fix` | Review, then fix the 🔴/🟠 in code — each fix separate and reviewable |
+| `xss` `idor` `secrets` `deps` `privacy` `llm` `<commandment number>` | Focused deep review of one commandment (3/4/5/8/10/9), including code outside the diff |
+| `harden` | Not bugs but missing defense layers — per `references/harden.md` |
+| `explain <number>` | Learning mode: explain one commandment with bad→good examples. No review |
+| `checklist` | Emit a markdown checklist to file in a PR. No analysis |
+| `community` | Review with community-app emphases (UGC + CSV import) — `references/community-app.md` |
 
-## פורמט הדוח
+## Report format
 
 ```
-# סקירת אבטחה /ran-bar-zik
-פסק דין: <עובר / עובר עם הסתייגויות / נכשל>
-נסקרו: <קבצים / דיף / PR>   ·   ממצאים: 🔴 N · 🟠 N · 🟡 N · 🔵 N
+# Security review /ran-bar-zik
+Verdict: <pass / pass with reservations / fail>
+Reviewed: <files / diff / PR>   ·   Findings: 🔴 N · 🟠 N · 🟡 N · 🔵 N
 
-## לפי עשרת הדיברות
-1. אל תבטח בצד הלקוח — <✅/⚠️/❌/➖> <שורה אחת>
-... (עד 10)
+## By the ten commandments
+1. Don't trust the client — <✅/⚠️/❌/➖> <one line>
+... (up to 10)
 
-## ממצאים (מהחמור לקל)
-### 🔴 [דיבר 4 · IDOR] `api/doc.js:42`
-**מה:** ... · **ניצול:** ... · **תיקון:** <diff>
+## Findings (most to least severe)
+### 🔴 [Commandment 4 · IDOR] `api/doc.js:42`
+**What:** ... · **Exploit:** ... · **Fix:** <diff>
 
-## מה טוב (חיזוקים)
-## מה לתקן קודם
+## What's good (strengths)
+## Fix first
 ```
 
-סיים ב: *"נבדק לפי עשרת הדיברות של רן בר-זיק. סקירה מסייעת — אינה תחליף לבדיקת
-חדירה (pentest) או לביקורת אבטחה מלאה."*
+End with: *"Reviewed against Ran Bar-Zik's ten commandments. An assistive
+review — not a substitute for a penetration test or a full security audit."*
 
-## עשרת הדיברות (תמצית)
+## The ten commandments (summary)
 
-1. **לא תבטח בצד הלקוח.** ולידציה בצד לקוח היא UX; האמת בשרת. מחיר, role,
-   בעלות והרשאה נקבעים בשרת בלבד.
-2. **כל קלט הוא עוין עד שהוכח אחרת.** ולד בשרת: body, query, params, headers,
-   cookies, שמות קבצים, תאי CSV. allow-list, לא deny-list.
-3. **סנן פלט לפי הקשר (XSS).** קודד לפי ההקשר (HTML/attr/JS/URL), escaping
-   אוטומטי, Trusted Types, CSP. **WAF וסינון blacklist לא יצילו אותך.**
-4. **בדוק הרשאה לכל אובייקט (IDOR).** בכל בקשה ודא בשרת שהמשתמש רשאי לגשת
-   דווקא לאובייקט הזה. מזהה "עמום" אינו הרשאה.
-5. **סודות לא בקוד צד לקוח.** אין מפתחות/טוקנים ב-frontend או ב-repo. סוד
-   שדלף — מחליפים, לא מסתירים.
-6. **"לא פרצו לך — דלף לך."** אל תחזיר מה-API יותר מהנדרש למסך.
-7. **הצפן הכל.** HTTPS + HSTS, bcrypt/argon2 (לא MD5/SHA1), הצפנת מידע רגיש,
-   cookies עם Secure/HttpOnly/SameSite.
-8. **שרשרת האספקה היא שטח תקיפה.** lockfile, גרסאות נעולות, SRI, מזעור
-   צד-שלישי, סריקת תלויות ב-CI.
-9. **הגן על ה-LLM/הסוכן שלך.** פלט מודל = קלט לא-אמין. prompt injection,
-   safeguards על קלט ופלט, הרשאות מינימום לכלים.
-10. **פרטיות, שקיפות ואחריות.** מזער PII, אל תדליף בשגיאות/לוגים, מדיניות
-    מחיקה, rate-limiting, ותכנן דיווח אחראי.
+1. **Don't trust the client.** Client-side validation is UX; the truth is on the
+   server. Price, role, ownership and permission are decided on the server only.
+2. **Every input is hostile until proven otherwise.** Validate on the server:
+   body, query, params, headers, cookies, filenames, CSV cells. Allow-list, not
+   deny-list.
+3. **Encode output by context (XSS).** Encode per context (HTML/attr/JS/URL),
+   auto-escaping, Trusted Types, CSP. **A WAF and blacklist filtering won't save
+   you.**
+4. **Authorize every object (IDOR).** On every request verify on the server that
+   the user may access *this specific* object. An "opaque" identifier is not
+   authorization.
+5. **No secrets in client-side code.** No keys/tokens in the frontend or the
+   repo. A leaked secret is rotated, not hidden.
+6. **"You weren't hacked — you leaked."** Don't return more from the API than the
+   screen needs.
+7. **Encrypt everything.** HTTPS + HSTS, bcrypt/argon2 (not MD5/SHA1), encrypt
+   sensitive data, cookies with Secure/HttpOnly/SameSite.
+8. **The supply chain is an attack surface.** Lockfile, pinned versions, SRI,
+   minimize third-party, dependency scanning in CI.
+9. **Guard your LLM/agent.** Model output = untrusted input. Prompt injection,
+   safeguards on input and output, least-privilege tool permissions.
+10. **Privacy, transparency and accountability.** Minimize PII, don't leak it in
+    errors/logs, deletion policy, rate-limiting, and plan for responsible
+    disclosure.
 
-קבצים: `references/commandments.md` (פירוט + דוגמאות) · `references/harden.md`
-(שכבות הגנה) · `references/community-app.md` (UGC + CSV) · `scripts/scan.sh`
-(סורק; בדיקה עצמית: `scripts/test_scan.sh`).
+Files: `SKILL_HE.md` (Hebrew version) · `references/commandments.md` (detail +
+examples) · `references/harden.md` (defense layers) · `references/community-app.md`
+(UGC + CSV) · `scripts/scan.sh` (scanner; self-check: `scripts/test_scan.sh`).
+Use in non-Claude agents: see `adapters/` and the README.
