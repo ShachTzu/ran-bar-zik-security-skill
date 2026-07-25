@@ -19,7 +19,7 @@ metadata:
     he: סקירת אבטחת-קוד לפי עשרת הדיברות של רן בר-זיק — XSS, IDOR, סודות, פרטיות והקשחה.
     en: Security code review against Ran Bar-Zik's ten commandments — XSS, IDOR, secrets, privacy, hardening.
   tags:
-    he: [אבטחה, סקירת-קוד, XSS, IDOR, פרטיות, OWASP, ישראל, עברית]
+    he: [אבטחה, סקירת-קוד, אבטחת-אפליקציות, XSS, IDOR, פרטיות, OWASP, ישראל, עברית, אבטחת-LLM]
     en: [security, code-review, appsec, xss, idor, privacy, owasp, israel, hebrew, llm-safety]
 ---
 
