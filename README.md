@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+📄 **הסקיל:** [`skills/ran-bar-zik/SKILL.md`](skills/ran-bar-zik/SKILL.md) (אנגלית) · [`SKILL_HE.md`](skills/ran-bar-zik/SKILL_HE.md) (עברית) · [`adapters/`](adapters/security-rules.md) (סוכנים אחרים)
+
 Claude skill (Claude Code / Claude Desktop) שסוקר קוד מול **עשרת הדיברות של
 רן בר-זיק** — מפתח ועיתונאי אבטחה שהמסר החוזר שלו הוא שרוב ה"פריצות" אינן קסם:
 

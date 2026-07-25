@@ -1,5 +1,6 @@
 ---
 name: ran-bar-zik
+license: MIT
 description: >-
   Security code review against Ran Bar-Zik's ten commandments. סקירת אבטחת-קוד
   לפי "עשרת הדיברות" של רן בר-זיק. Trigger when the user runs /ran-bar-zik (with
