@@ -2,7 +2,7 @@
 # Self-check for scan.sh.
 #
 # Each commandment is asserted on its OWN full section label, not a "N ·"
-# prefix — two sections sharing a number (5/5b, 7/7b) would otherwise let a
+# prefix - two sections sharing a number (5/5b, 7/7b) would otherwise let a
 # dead pattern pass on its sibling's hits. Runs under both engines: the rg
 # path and the grep path accept different regex dialects, and a pattern that
 # only one of them rejects is exactly the bug this file exists to catch.
@@ -45,7 +45,7 @@ user.passwordHash = await bcrypt.hash(pw, 12);
 fetch('http://localhost:3000/dev');
 EOF
 
-# One assertion per section label — a section that stops matching cannot be
+# One assertion per section label - a section that stops matching cannot be
 # covered by another section that happens to share its commandment number.
 SECTIONS=(
   "1 · client-side trust"
@@ -99,7 +99,7 @@ RG=$(PATH="$PATH" command -v rg 2>/dev/null)
 if [ -n "$RG" ] && [ -x "$RG" ]; then
   run_engine rg "$(dirname "$RG"):/usr/bin:/bin"
 else
-  echo "SKIP [rg]: no ripgrep binary on PATH — grep path only"
+  echo "SKIP [rg]: no ripgrep binary on PATH - grep path only"
 fi
 
 exit "$FAILED"

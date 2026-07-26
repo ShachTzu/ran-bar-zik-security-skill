@@ -11,6 +11,16 @@ description: >-
   idor, secrets, deps, privacy, llm, harden, explain, checklist, community.
   אל תשתמש בזה לסריקת CVE בתלויות או לתאימות רגולטורית (השתמש ב-israeli-appsec-scanner),
   ולא לסקירת קוד כללית של נכונות/באגים (השתמש ב-code-review).
+metadata:
+  display_name:
+    he: "סקירת אבטחה - עשרת הדיברות של רן בר-זיק"
+    en: "Ran Bar-Zik Security Review"
+  display_description:
+    he: "סקירת אבטחת-קוד לפי עשרת הדיברות של רן בר-זיק: אל תבטח בצד הלקוח, ולידציה והרשאה בשרת, מניעת XSS ו-IDOR, סודות מחוץ ל-frontend, מזעור חשיפת מידע, הצפנה, אבטחת תלויות והגנה על LLM."
+    en: "Security code review against Ran Bar-Zik's ten commandments: never trust the client, server-side validation and authorization, XSS and IDOR prevention, no secrets in the frontend, minimize data exposure, encryption, dependency safety, and LLM guardrails."
+  tags:
+    he: ["אבטחה", "סקירת-קוד", "אבטחת-אפליקציות", "XSS", "IDOR", "פרטיות", "OWASP", "ישראל", "עברית", "אבטחת-LLM"]
+    en: ["security", "code-review", "appsec", "xss", "idor", "privacy", "owasp", "israel", "hebrew", "llm-safety"]
 ---
 
 # עשרת הדיברות לפי רן בר-זיק - סוקר אבטחה

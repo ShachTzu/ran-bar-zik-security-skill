@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# scan.sh — red-flag pre-scan for the /ran-bar-zik security review.
+# scan.sh - red-flag pre-scan for the /ran-bar-zik security review.
 #
 # Output is LEADS, not findings. Every hit must be read in context before it
-# becomes a finding. Exit code is 0 for "scan ran", 2 for "scan is broken" —
+# becomes a finding. Exit code is 0 for "scan ran", 2 for "scan is broken" -
 # a lead is not a failure, but a silently-broken pattern is.
 #
 #   ./scan.sh [path]          scan a path (default: .)
@@ -30,7 +30,7 @@ TARGET="${1:-.}"
 if [ "$TARGET" = "--diff" ]; then
   REF="${2:-HEAD}"
   ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || {
-    echo "not a git repository — use: scan.sh <path>" >&2; exit 2; }
+    echo "not a git repository - use: scan.sh <path>" >&2; exit 2; }
   # git prints repo-root-relative paths, so scan from the root
   cd "$ROOT" || exit 2
   git rev-parse --verify --quiet "$REF^{commit}" >/dev/null || {
@@ -40,7 +40,7 @@ if [ "$TARGET" = "--diff" ]; then
   git diff -z --name-only --diff-filter=d "$REF" > "$LIST"
   [ ! -s "$LIST" ] && git diff -z --name-only --diff-filter=d > "$LIST"
   if [ ! -s "$LIST" ]; then
-    echo "no changed files vs $REF — nothing to scan"; exit 0
+    echo "no changed files vs $REF - nothing to scan"; exit 0
   fi
   TARGET=""
 fi
@@ -57,7 +57,7 @@ SEARCH() { # $1 = pattern; rc: 0 = hits, 1 = none, >1 = pattern rejected
 if command -v rg >/dev/null 2>&1; then
   _search() { # $1 = pattern
     if [ -n "$LIST" ]; then
-      # -uu: do not skip gitignored/hidden files — .env is exactly what we want
+      # -uu: do not skip gitignored/hidden files - .env is exactly what we want
       xargs -0 -r rg -H -n --no-heading --color=never -uu -e "$1" -- < "$LIST"
     else
       rg -H -n --no-heading --color=never -uu \
@@ -91,7 +91,7 @@ section() { # $1 = label, $2 = pattern, $3 = optional exclude pattern
   # rc 0 = hits, 1 = no hits, >1 = the pattern itself is bad. Never swallow >1:
   # a regex the engine rejects looks exactly like "this category is clean".
   if [ "$rc" -gt 1 ]; then
-    printf '\n!!! %s — PATTERN FAILED under %s (this category was NOT scanned)\n%s\n' \
+    printf '\n!!! %s - PATTERN FAILED under %s (this category was NOT scanned)\n%s\n' \
       "$1" "$ENGINE" "$(head -3 "$err")" >&2
     BROKEN=$((BROKEN + 1)); rm -f "$err"; return
   fi
@@ -111,12 +111,12 @@ section() { # $1 = label, $2 = pattern, $3 = optional exclude pattern
 }
 
 HITS=0
-echo "ran-bar-zik pre-scan ($ENGINE) — leads only, verify each in context"
+echo "ran-bar-zik pre-scan ($ENGINE) - leads only, verify each in context"
 
 section "1 · client-side trust" \
   '(type=.hidden.|localStorage\.(getItem|setItem)\([^)]*(role|admin|price|token)|(if|&&|\|\|)[^\n]{0,20}\b(isAdmin|is_admin)\b|role\s*[:=]\s*["'"'"'](admin|owner))'
 
-# No quote chars in this pattern on purpose — a quote class here has to survive
+# No quote chars in this pattern on purpose - a quote class here has to survive
 # three levels of shell quoting, and getting it wrong silently kills the whole
 # category (it did: the class excluded the ' inside the very SQL it was hunting).
 section "2 · unvalidated input / injection" \
@@ -125,7 +125,7 @@ section "2 · unvalidated input / injection" \
 section "3 · XSS sinks" \
   '(innerHTML|outerHTML|dangerouslySetInnerHTML|v-html|insertAdjacentHTML|document\.write|javascript:|\$\([^)]*\)\.html\()'
 
-section "4 · IDOR — object id used directly in a query/response" \
+section "4 · IDOR - object id used directly in a query/response" \
   '((findByPk|findById|findOne|findUnique|getDoc|get|delete|update|remove)\([^)]*(params|query|body)\.(id|userId|user_id|ownerId)|res\.(json|send)\([^)]*(params|query)\.id)'
 
 section "5 · hardcoded secrets" \
@@ -157,11 +157,11 @@ section "10 · leaky errors & logs" \
 
 echo
 if [ "$BROKEN" -gt 0 ]; then
-  echo "$BROKEN pattern(s) FAILED to run — the scan is incomplete. Fix before trusting it." >&2
+  echo "$BROKEN pattern(s) FAILED to run - the scan is incomplete. Fix before trusting it." >&2
   exit 2
 fi
 if [ "$HITS" -eq 0 ]; then
-  echo "no red-flag patterns matched. Still read the code — grep sees text, not logic."
+  echo "no red-flag patterns matched. Still read the code - grep sees text, not logic."
 else
   echo "$HITS categories with leads. Read each in context before calling it a finding."
 fi
