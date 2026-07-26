@@ -5,6 +5,9 @@ name: test
 # ripgrep explicitly and test_scan.sh asserts both paths.
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   scan-self-check:
     runs-on: ubuntu-latest
