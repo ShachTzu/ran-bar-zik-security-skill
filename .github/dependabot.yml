@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # Repo has no package manifests; the only third-party code is GitHub Actions.
+  # Practices commandment 8 (supply chain) on our own workflows.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
