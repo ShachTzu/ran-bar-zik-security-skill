@@ -18,5 +18,6 @@ jobs:
           subject-path: |
             **/SKILL.md
             **/SKILL_HE.md
+            **/metadata.json
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
