@@ -1,0 +1,38 @@
+{
+  "cycles": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-21",
+      "lessons": [
+        "Framed the skill around one guiding principle ('the browser is the attacker's tool') and ten commandments, each mapped to a concrete Israeli disclosure or an OWASP category, so findings are grounded rather than opinion.",
+        "Scanner discipline: scripts/scan.sh emits leads, not findings. The instructions force a read-in-context step (innerHTML on a constant string is not a finding; findById(id) after an ownership check is not a finding) so the agent does not report false positives from grep output.",
+        "Anti-injection hardening of the scanner itself: a repository being scanned must not be able to execute code through the scanner. CI asserts this with a crafted filename ('--pre=sh') that ripgrep would otherwise parse as a command-executing flag; the test fails if a PWNED marker appears.",
+        "Dual-engine self-check: scan.sh runs under ripgrep and grep -E, which accept different regex dialects. An early pattern was rejected by ripgrep only while 2>/dev/null hid the error, making a whole category look clean. Rejected patterns now print PATTERN FAILED and the script exits 2."
+      ],
+      "buckets": {
+        "persistent_fail": [],
+        "deferred": [
+          "scan.sh is grep, not AST: it misses obfuscated code and cross-file flows. The read-in-context step is mandatory precisely because of this ceiling."
+        ]
+      }
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-07-26",
+      "lessons": [
+        "Reach fix: SKILL.md is now English-primary with a full Hebrew companion (SKILL_HE.md), and reports still adapt to the user's language. Added adapters/security-rules.md so the ruleset works in Cursor, Windsurf, Copilot, Codex/OpenCode and Gemini CLI, not only Claude.",
+        "Claude Desktop compatibility fix: the enriched metadata (display_name, display_description, tags, supported_agents) was living in the SKILL.md frontmatter, which Claude Desktop rejects. Moved it all to a separate metadata.json and reduced the frontmatter to name, description and license.",
+        "Added a real-world case to references/commandments.md: the July 2026 Guardio / Adobe Acrobat Chrome-extension WhatsApp-takeover chain (unauthenticated internal message channel + test-only code shipped to production), which illustrates commandments 2 and 6 with a fresh, verifiable Israeli-research disclosure.",
+        "Infra to Skills IL standard: added metadata.json, evidence.json (claims grounded in the Elector, Beit Shemesh and cannabis-site disclosures, the Guardio case, OWASP, and the 2017 Data Security Regulations) and this optimization-log.json. Enabled secret scanning, CodeQL, and a Sigstore-attested signed release; restricted the test workflow's GITHUB_TOKEN to contents:read.",
+        "Style: removed em dashes and en dashes across the skill files per the Skills IL project rule, replacing them with ASCII hyphens, commas or parentheses."
+      ],
+      "buckets": {
+        "persistent_fail": [],
+        "deferred": [
+          "The skill is mirrored at the repo root (for the submission form) and in skills/ran-bar-zik/ (for install). The two copies must be kept in sync manually; a CI drift-check is a candidate for a future cycle.",
+          "references/ still contain Hebrew-first detail; an English pass on the references would widen reach further but is not required for the review flow, which is driven by SKILL.md."
+        ]
+      }
+    }
+  ]
+}

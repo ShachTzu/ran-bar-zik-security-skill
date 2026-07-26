@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "ran-bar-zik",
+  "generated": "2026-07-26",
+  "note": "This skill is a synthesis of Ran Bar-Zik's recurring security messages, not an official document he published. The claims below ground the commandments in his disclosures and in external standards. Article titles are quoted verbatim from the source pages; some TheMarker sources are paywalled and were verified in a browser.",
+  "claims": [
+    {
+      "id": "elector-2020",
+      "claim": "The 2020 Elector app disclosure exposed the Likud voter database with personal details of 6,453,254 Israelis, reachable through the browser alone, which grounds commandment 1 ('the browser is the attacker's tool') and commandment 6.",
+      "source_url": "https://he.wikipedia.org/wiki/%D7%A8%D7%9F_%D7%91%D7%A8-%D7%96%D7%99%D7%A7",
+      "raw_snippet": "רן בר-זיק",
+      "effective_date": "2020-02-09",
+      "source_fetched_at": "2026-07-21T00:00:00Z",
+      "notes": "The 6,453,254 figure and the browser-only access are documented in the Elector affair coverage; the Wikipedia page on Ran Bar-Zik records his role in the disclosure."
+    },
+    {
+      "id": "elector-slogan",
+      "claim": "Bar-Zik's technical writeup of the Elector affair is titled 'we were not hacked, it just leaked', the origin of commandment 6 and of the insight that the absence of attacker traces is not proof that data did not leak.",
+      "source_url": "https://internet-israel.com/%D7%A4%D7%99%D7%AA%D7%95%D7%97-%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98/%D7%91%D7%A0%D7%99%D7%99%D7%AA-%D7%90%D7%AA%D7%A8%D7%99-%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98-%D7%9C%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D/%D7%9C%D7%90-%D7%A4%D7%A8%D7%A6%D7%95-%D7%9C%D7%A0%D7%95-%D7%A8%D7%A7-%D7%93%D7%9C%D7%A3-%D7%9C%D7%A0%D7%95-%D7%9C%D7%A7%D7%97%D7%99%D7%9D-%D7%98%D7%9B%D7%A0%D7%99%D7%99%D7%9D-%D7%9C%D7%9E%D7%A4%D7%A8/",
+      "raw_snippet": "לא פרצו לנו, רק דלף לנו",
+      "effective_date": "2020-02-01",
+      "source_fetched_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "id": "beit-shemesh-2025",
+      "claim": "A Beit Shemesh municipality system exposed residents' disability percentages and mental-health information (2025), a repeat of the pattern behind commandments 6 and 10: sensitive data reachable by anyone with a browser, with nobody 'hacking'.",
+      "source_url": "https://www.themarker.com/captain-internet/2025-08-25/ty-article/.premium/00000198-e064-d9a7-add9-e2e51a110000",
+      "raw_snippet": "אחוזי נכות ומחלות נפש: מערכת של עיריית בית שמש חשפה מידע רגיש על תושבים",
+      "effective_date": "2025-08-25",
+      "source_fetched_at": "2026-07-21T00:00:00Z",
+      "verified_via": "browser",
+      "notes": "TheMarker Captain Internet column; paywalled. Snippet is the verbatim headline."
+    },
+    {
+      "id": "cannabis-2024",
+      "claim": "More than 400,000 documents with personal and sensitive medical information leaked from a cannabis-sales site (2024), grounding the Israeli-PII emphasis in commandments 6 and 10.",
+      "source_url": "https://www.themarker.com/captain-internet/2024-09-15/ty-article/.premium/00000191-e15d-d084-a5db-eb5f16230000",
+      "raw_snippet": "יותר מ-400 אלף מסמכים: פרטים אישיים ומידע רפואי רגיש דלפו מאתר לממכר קנאביס",
+      "effective_date": "2024-09-15",
+      "source_fetched_at": "2026-07-21T00:00:00Z",
+      "verified_via": "browser",
+      "notes": "TheMarker Captain Internet column; paywalled. Snippet is the verbatim headline."
+    },
+    {
+      "id": "guardio-adobe-2026",
+      "claim": "In July 2026, Israeli firm Guardio disclosed an exploit chain in an Adobe Acrobat Reader Chrome extension (300M+ installs): an internal HTML resource loaded JSON commands from URL parameters without origin validation (commandment 2), and a leftover test-only capability could run code on WhatsApp Web tabs, enabling account takeover via OTP theft (commandment 6). Grounds the lessons that third-party JS with full DOM access is a full attack surface and that test-only code shipped to production is exposure.",
+      "source_url": "https://www.geektime.co.il/guardio-whatsapp-takeover-with-adobe-pdf-reader-on-chrome/",
+      "raw_snippet": "Guardio",
+      "effective_date": "2026-07-01",
+      "source_fetched_at": "2026-07-24T00:00:00Z"
+    },
+    {
+      "id": "owasp-top10-2021",
+      "claim": "Commandments 2, 3, 4, 7, 8 and 10 map to the OWASP Top 10:2021 categories (A01 Broken Access Control, A02 Cryptographic Failures, A03 Injection, A05 Security Misconfiguration, A06 Vulnerable and Outdated Components, A09 Security Logging and Monitoring Failures).",
+      "source_url": "https://owasp.org/Top10/2021/",
+      "raw_snippet": "OWASP Top 10:2021",
+      "effective_date": "2021-09-24",
+      "source_fetched_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "id": "owasp-a01-2021",
+      "claim": "Commandment 4 (authorize every object / IDOR) maps to OWASP A01:2021 Broken Access Control, the top category in the 2021 list.",
+      "source_url": "https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/",
+      "raw_snippet": "A01:2021 - Broken Access Control",
+      "effective_date": "2021-09-24",
+      "source_fetched_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "id": "owasp-llm-top10",
+      "claim": "Commandment 9 (guard your LLM/agent) maps to the OWASP Top 10 for LLM Applications, specifically LLM01 Prompt Injection and LLM05 Improper Output Handling.",
+      "source_url": "https://genai.owasp.org/llm-top-10/",
+      "raw_snippet": "OWASP Top 10 for LLM Applications",
+      "effective_date": "2025-01-01",
+      "source_fetched_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "id": "privacy-data-security-regulations-2017",
+      "claim": "Commandment 10 and the Israeli-PII rule are grounded in the Protection of Privacy (Data Security) Regulations, 5777-2017, which impose access-control, authorization, documentation and breach-reporting duties on database holders.",
+      "source_url": "https://www.gov.il/he/pages/data_security_regulation",
+      "raw_snippet": "תקנות הגנת הפרטיות (אבטחת מידע), התשע\"ז-2017",
+      "effective_date": "2018-05-08",
+      "source_fetched_at": "2026-07-21T00:00:00Z"
+    }
+  ]
+}

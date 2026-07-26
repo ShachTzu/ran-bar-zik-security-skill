@@ -1,7 +1,7 @@
-# Hardening — שכבות הגנה שכדאי שיהיו
+# Hardening - שכבות הגנה שכדאי שיהיו
 
 לשימוש ב-`/ran-bar-zik harden`. זו לא רשימת באגים אלא רשימת **הגנות חסרות**.
-לכל פריט: בדוק אם קיים בקוד/בקונפיג, ואם לא — הצע את הקטע הקונקרטי.
+לכל פריט: בדוק אם קיים בקוד/בקונפיג, ואם לא - הצע את הקטע הקונקרטי.
 
 ## Security headers (דיברות 3, 7)
 
@@ -13,7 +13,7 @@ Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: geolocation=(), camera=(), microphone=()
 ```
 
-- `unsafe-inline` / `unsafe-eval` ב-script-src מבטל את רוב הערך של ה-CSP — nonce או hash.
+- `unsafe-inline` / `unsafe-eval` ב-script-src מבטל את רוב הערך של ה-CSP - nonce או hash.
 - Next.js/Nuxt/Vite: ה-CSP נכתב ב-middleware או בהגדרות ה-host, לא ב-meta tag.
 - Trusted Types (`require-trusted-types-for 'script'`) חוסם DOM-XSS בשורש. שווה לדחוף.
 
@@ -31,7 +31,7 @@ res.cookie('sid', token, {
 ## Rate limiting (דיבר 10)
 
 חובה על: login, הרשמה, שחזור סיסמה, טפסי יצירת קשר, endpoints של חיפוש/ייצוא,
-וכל endpoint שמייצר עלות (מייל, SMS, LLM). ללא זה — enumeration, credential
+וכל endpoint שמייצר עלות (מייל, SMS, LLM). ללא זה - enumeration, credential
 stuffing וחשבון ענן שמתפוצץ.
 
 ## Auth (דיברות 1, 4)
@@ -44,7 +44,7 @@ stuffing וחשבון ענן שמתפוצץ.
 
 - `npm audit --audit-level=high` / `pnpm audit` כשלב חוסם.
 - Dependabot/Renovate + lockfile מקומיט.
-- סורק סודות (gitleaks/trufflehog) על כל PR — לא רק על main.
+- סורק סודות (gitleaks/trufflehog) על כל PR - לא רק על main.
 - SRI לכל `<script src>` חיצוני, או self-hosting של הספרייה.
 
 ## Logs & errors (דיבר 10)
@@ -55,6 +55,6 @@ stuffing וחשבון ענן שמתפוצץ.
 
 ## מידע אישי ישראלי (דיבר 10)
 
-ת"ז, מידע רפואי, פרטי ילדים ופרטי קשר — מוסדרים בחוק הגנת הפרטיות ובתקנות אבטחת
+ת"ז, מידע רפואי, פרטי ילדים ופרטי קשר - מוסדרים בחוק הגנת הפרטיות ובתקנות אבטחת
 מידע. דרוש: מזעור איסוף, הצפנה ב-rest, בקרת גישה מתועדת, מדיניות מחיקה, ותיעוד
 מאגר. חשיפה = סיכון משפטי, לא רק באג.

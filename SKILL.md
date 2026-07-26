@@ -6,35 +6,25 @@ description: >-
   לפי "עשרת הדיברות" של רן בר-זיק. Trigger when the user runs /ran-bar-zik (with
   or without arguments), or asks: "security review", "review this for security",
   "check for XSS", "check for IDOR", "is this secure", "audit this endpoint",
-  "סקירת אבטחה", "בדוק אבטחה", "האם זה בטוח" — and before any merge/deploy of
+  "סקירת אבטחה", "בדוק אבטחה", "האם זה בטוח" - and before any merge/deploy of
   code touching auth, authorization, user input, file upload, or personal data.
   Subcommands: fix, xss, idor, secrets, deps, privacy, llm, harden, explain,
   checklist, community. Do NOT use for CVE/dependency scanning or regulatory
   compliance (use israeli-appsec-scanner), nor for general correctness/bug
   review (use code-review). Hebrew companion: SKILL_HE.md.
-metadata:
-  display_name:
-    he: סקירת אבטחה — עשרת הדיברות של רן בר-זיק
-    en: Ran Bar-Zik Security Review
-  display_description:
-    he: סקירת אבטחת-קוד לפי עשרת הדיברות של רן בר-זיק — XSS, IDOR, סודות, פרטיות והקשחה.
-    en: Security code review against Ran Bar-Zik's ten commandments — XSS, IDOR, secrets, privacy, hardening.
-  tags:
-    he: [אבטחה, סקירת-קוד, אבטחת-אפליקציות, XSS, IDOR, פרטיות, OWASP, ישראל, עברית, אבטחת-LLM]
-    en: [security, code-review, appsec, xss, idor, privacy, owasp, israel, hebrew, llm-safety]
 ---
 
-# Ran Bar-Zik's Ten Commandments — Security Reviewer
+# Ran Bar-Zik's Ten Commandments - Security Reviewer
 
 Run a security code review against the ten commandments. Guiding principle:
-**"the browser is the attacker's tool"** — anything sent to the client is
+**"the browser is the attacker's tool"** - anything sent to the client is
 visible and editable in F12. (Hebrew version: `SKILL_HE.md`.)
 
 **Language:** write the report in the user's language. If the user writes in
 Hebrew, the whole report is in Hebrew, including field names and commandment
 names. Don't mix languages.
 
-## Step 1 — pick a target
+## Step 1 - pick a target
 
 `/ran-bar-zik` **always reviews something**. Don't ask "what should I review?"
 before trying to find it yourself.
@@ -45,16 +35,16 @@ Argument given? That's the target: a file/dir path · `pr <n>` (run
 
 **No argument? Go in this order and stop at the first that returns something:**
 
-1. `git diff` — uncommitted changes.
-2. `git diff main...HEAD` (or `master`) — the branch diff.
+1. `git diff` - uncommitted changes.
+2. `git diff main...HEAD` (or `master`) - the branch diff.
 3. The project's sensitive files: routes/endpoints, auth, models, forms, config.
 
-Only if all three are empty and nothing was pasted — ask the user to point at
+Only if all three are empty and nothing was pasted - ask the user to point at
 something.
 
-## Step 2 — scan for red flags
+## Step 2 - scan for red flags
 
-Locate `scan.sh` and run it against the target. The path isn't known up front —
+Locate `scan.sh` and run it against the target. The path isn't known up front -
 search for it:
 
 ```bash
@@ -64,20 +54,20 @@ SCAN=$(ls ~/.claude/skills/ran-bar-zik/scripts/scan.sh \
 ```
 
 Not found? Run `find ~/.claude ~/.claude/plugins . -name scan.sh -path '*ran-bar-zik*' 2>/dev/null | head -1`.
-Still not? Grep manually by the flags in `references/commandments.md` — don't
+Still not? Grep manually by the flags in `references/commandments.md` - don't
 skip this step.
 
 The output is **leads, not findings**. If the script prints `PATTERN FAILED` or
-exits with 2 — the scan is partial; say so in the report.
+exits with 2 - the scan is partial; say so in the report.
 
-## Step 3 — read every lead in context
+## Step 3 - read every lead in context
 
-A lead without context is a guess. `innerHTML` on a constant string — not a
-finding. `findById(id)` inside a function that already verified ownership — not
+A lead without context is a guess. `innerHTML` on a constant string - not a
+finding. `findById(id)` inside a function that already verified ownership - not
 a finding. Read the surrounding code, and `references/commandments.md`, before
 you score anything.
 
-## Step 4 — rule commandment by commandment
+## Step 4 - rule commandment by commandment
 
 For each of the ten: ✅ pass / ⚠️ suspect / ❌ violation / ➖ not applicable.
 
@@ -98,10 +88,10 @@ Verdict: "pass" / "pass with reservations" / "fail: fix before deploy".
 - **Fix at the root.** Same flaw in 5 places → fix the shared helper. Grep the
   other callers before proposing a point fix.
 - **Speed doesn't buy security.** An optimization that moves data or
-  authorization decisions to the client is a regression — say so even if the
+  authorization decisions to the client is a regression - say so even if the
   user asked to speed things up.
 - **Israeli PII** (national ID / ת"ז, health, children, contact details) is
-  regulated under the Privacy Protection Law — exposure is legal risk, not just
+  regulated under the Privacy Protection Law - exposure is legal risk, not just
   a bug. Mark 🔴.
 
 ## Subcommands
@@ -109,12 +99,12 @@ Verdict: "pass" / "pass with reservations" / "fail: fix before deploy".
 | Command | What it does |
 |---|---|
 | *(default)* | Full review, all 10 commandments |
-| `fix` | Review, then fix the 🔴/🟠 in code — each fix separate and reviewable |
+| `fix` | Review, then fix the 🔴/🟠 in code - each fix separate and reviewable |
 | `xss` `idor` `secrets` `deps` `privacy` `llm` `<commandment number>` | Focused deep review of one commandment (3/4/5/8/10/9), including code outside the diff |
-| `harden` | Not bugs but missing defense layers — per `references/harden.md` |
+| `harden` | Not bugs but missing defense layers - per `references/harden.md` |
 | `explain <number>` | Learning mode: explain one commandment with bad→good examples. No review |
 | `checklist` | Emit a markdown checklist to file in a PR. No analysis |
-| `community` | Review with community-app emphases (UGC + CSV import) — `references/community-app.md` |
+| `community` | Review with community-app emphases (UGC + CSV import) - `references/community-app.md` |
 
 ## Report format
 
@@ -124,7 +114,7 @@ Verdict: <pass / pass with reservations / fail>
 Reviewed: <files / diff / PR>   ·   Findings: 🔴 N · 🟠 N · 🟡 N · 🔵 N
 
 ## By the ten commandments
-1. Don't trust the client — <✅/⚠️/❌/➖> <one line>
+1. Don't trust the client - <✅/⚠️/❌/➖> <one line>
 ... (up to 10)
 
 ## Findings (most to least severe)
@@ -136,7 +126,7 @@ Reviewed: <files / diff / PR>   ·   Findings: 🔴 N · 🟠 N · 🟡 N · �
 ```
 
 End with: *"Reviewed against Ran Bar-Zik's ten commandments. An assistive
-review — not a substitute for a penetration test or a full security audit."*
+review - not a substitute for a penetration test or a full security audit."*
 
 ## The ten commandments (summary)
 
@@ -153,7 +143,7 @@ review — not a substitute for a penetration test or a full security audit."*
    authorization.
 5. **No secrets in client-side code.** No keys/tokens in the frontend or the
    repo. A leaked secret is rotated, not hidden.
-6. **"You weren't hacked — you leaked."** Don't return more from the API than the
+6. **"You weren't hacked - you leaked."** Don't return more from the API than the
    screen needs.
 7. **Encrypt everything.** HTTPS + HSTS, bcrypt/argon2 (not MD5/SHA1), encrypt
    sensitive data, cookies with Secure/HttpOnly/SameSite.

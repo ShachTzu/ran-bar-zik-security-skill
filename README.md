@@ -109,6 +109,9 @@ skills/ran-bar-zik/scripts/test_scan.sh
 skills/ran-bar-zik/
 ├── SKILL.md                      # הפעולה הראשית (אנגלית), תת-פקודות, פורמט הדוח
 ├── SKILL_HE.md                   # הגרסה העברית המלאה
+├── metadata.json                 # מטא-דאטה ל-Skills IL (שם, תגיות, סוכנים נתמכים)
+├── evidence.json                 # מקורות מאמתים לכל טענה (אלקטור, OWASP, חוק הפרטיות)
+├── optimization-log.json         # יומן שיפורים של הסקיל
 ├── references/
 │   ├── commandments.md           # פירוט מלא + דוגמאות רע→טוב לכל דיבר
 │   ├── harden.md                 # CSP, headers, cookies, rate-limit, CI
