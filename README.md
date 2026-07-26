@@ -1,96 +1,98 @@
-# ran-bar-zik — סקירת אבטחה לפי עשרת הדיברות
+# ran-bar-zik - security review by the ten commandments
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-📄 **הסקיל:** [`skills/ran-bar-zik/SKILL.md`](skills/ran-bar-zik/SKILL.md) (אנגלית) · [`SKILL_HE.md`](skills/ran-bar-zik/SKILL_HE.md) (עברית) · [`adapters/`](adapters/security-rules.md) (סוכנים אחרים)
+[עברית / Hebrew README](README_HE.md)
 
-Claude skill (Claude Code / Claude Desktop) שסוקר קוד מול **עשרת הדיברות של
-רן בר-זיק** — מפתח ועיתונאי אבטחה שהמסר החוזר שלו הוא שרוב ה"פריצות" אינן קסם:
+A skill that reviews code against **Ran Bar-Zik's ten commandments** of secure
+web development. Bar-Zik is a veteran developer and security journalist whose
+recurring message is that most "hacks" are not magic:
 
-> **"כלי הפריצה הוא הדפדפן."**
+> **"The browser is the attacker's tool."**
 
-כל מה שנשלח ללקוח גלוי וניתן לעריכה ב-F12. הסקילג תופס את הכשלים לפני שמישהו
-עם כלי מפתחים תופס אותם קודם.
+Anything sent to the client is visible and editable in F12. The skill catches
+the failures before someone with dev tools catches them first. Reports are
+written in the user's language (Hebrew or English).
 
-*A Claude skill that reviews code against Ran Bar-Zik's ten commandments of
-secure web development. Reports are in Hebrew by default, English on request.*
+📄 The skill: [`skills/ran-bar-zik/SKILL.md`](skills/ran-bar-zik/SKILL.md)
+(English) · [`SKILL_HE.md`](skills/ran-bar-zik/SKILL_HE.md) (Hebrew) ·
+[`adapters/`](adapters/security-rules.md) (other agents).
 
 ---
 
-## התקנה
+## Install
 
 ```bash
 git clone https://github.com/ShachTzu/ran-bar-zik-security-skill.git
 cp -r ran-bar-zik-security-skill/skills/ran-bar-zik ~/.claude/skills/
 ```
 
-לפרויקט בודד: `cp -r skills/ran-bar-zik .claude/skills/`
+Single project: `cp -r skills/ran-bar-zik .claude/skills/`
 
-## שימוש
+## Usage
 
 ```
-/ran-bar-zik                  # סקירה של השינויים הנוכחיים (ברירת מחדל)
-/ran-bar-zik src/api          # סקירה של נתיב
-/ran-bar-zik pr 42            # סקירה של PR
-/ran-bar-zik fix              # סקירה ואז תיקון הממצאים הקריטיים
-/ran-bar-zik xss              # סקירה ממוקדת בדיבר אחד (xss/idor/secrets/deps/privacy/llm)
-/ran-bar-zik harden           # מה חסר: CSP, HSTS, cookie flags, rate-limit, CI scans
-/ran-bar-zik explain 4        # מצב לימוד — הסבר דיבר בודד
-/ran-bar-zik checklist        # צ'ק-ליסט markdown ל-PR
-/ran-bar-zik community        # דגשים לאפליקציית קהילה עם UGC + CSV
+/ran-bar-zik                  # review the current changes (default)
+/ran-bar-zik src/api          # review a path
+/ran-bar-zik pr 42            # review a PR
+/ran-bar-zik fix              # review, then fix the critical findings
+/ran-bar-zik xss              # focused review of one commandment (xss/idor/secrets/deps/privacy/llm)
+/ran-bar-zik harden           # what's missing: CSP, HSTS, cookie flags, rate-limit, CI scans
+/ran-bar-zik explain 4        # learning mode, explain a single commandment
+/ran-bar-zik checklist        # markdown checklist for a PR
+/ran-bar-zik community        # community-app emphases (UGC + CSV)
 ```
 
-בלי ארגומנטים הסקילג בוחר יעד בעצמו: שינויים לא-מקומיטים ← דיף הענף מול `main`
-← הקבצים הרגישים בפרויקט. הוא לא ישאל "מה לסקור?" לפני שניסה לגלות בעצמו.
+With no argument the skill picks a target itself: uncommitted changes, then the
+branch diff against `main`, then the project's sensitive files. It will not ask
+"what should I review?" before trying to find it on its own.
 
-הדוח נכתב בשפת המשתמש — עברית או אנגלית. `SKILL.md` באנגלית; `SKILL_HE.md` היא
-הגרסה העברית המלאה.
+The report is written in the user's language, Hebrew or English. `SKILL.md` is
+English; `SKILL_HE.md` is the full Hebrew version.
 
-## שימוש בסוכני AI אחרים (Cursor / Codex / Gemini / Copilot ...)
+## Use in other AI agents (Cursor / Codex / Gemini / Copilot ...)
 
-פורמט `SKILL.md` נטען אוטומטית רק במשפחת Claude, אבל **התוכן והסקריפט אינם
-תלויי-סוכן**. `adapters/security-rules.md` הוא גרסה מרוכזת של הכללים שמעתיקים
-לקובץ ההנחיות של כל סוכן:
+The `SKILL.md` format loads automatically only in the Claude family, but **the
+content and the scanner are agent-agnostic**. `adapters/security-rules.md` is a
+condensed version of the rules that you copy into any agent's instructions file:
 
-| סוכן | לאן להעתיק | נטען אוטומטית |
+| Agent | Where to copy | Auto-loads |
 |---|---|---|
-| Claude Code / Desktop / claude.ai | `.claude/skills/ran-bar-zik/` (הסקיל המלא) | ✅ |
-| Cursor | `.cursor/rules/ran-bar-zik.mdc` | ✅ |
-| Windsurf | `.windsurf/rules/ran-bar-zik.md` | ✅ |
-| GitHub Copilot | `.github/copilot-instructions.md` | ✅ |
-| OpenAI Codex / OpenCode | `AGENTS.md` (הוסף) | ✅ |
-| Gemini CLI | `GEMINI.md` | ✅ |
-| ChatGPT / Manus | הדבק כהנחיה מותאמת / prompt של פרויקט | ידני |
+| Claude Code / Desktop / claude.ai | `.claude/skills/ran-bar-zik/` (the full skill) | Yes |
+| Cursor | `.cursor/rules/ran-bar-zik.mdc` | Yes |
+| Windsurf | `.windsurf/rules/ran-bar-zik.md` | Yes |
+| GitHub Copilot | `.github/copilot-instructions.md` | Yes |
+| OpenAI Codex / OpenCode | `AGENTS.md` (append) | Yes |
+| Gemini CLI | `GEMINI.md` | Yes |
+| ChatGPT / Manus | paste as a custom instruction / project prompt | Manual |
 
-הסורק `scripts/scan.sh` רץ עצמאית בכל shell — בלי סוכן בכלל:
+The scanner `scripts/scan.sh` runs standalone in any shell, no agent at all:
 `bash scripts/scan.sh <path>`.
 
-*Works in any AI agent: copy `adapters/security-rules.md` into that agent's
-rules file (table above). The `scan.sh` scanner runs standalone in any shell.*
+## The ten commandments
 
-## עשרת הדיברות
-
-| # | הדיבר | תופס |
+| # | Commandment | Catches |
 |---|---|---|
-| 1 | לא תבטח בצד הלקוח | החלטות אבטחה ב-JS, שדות נסתרים, `if (isAdmin)` בלקוח |
-| 2 | כל קלט הוא עוין | SQL/NoSQL injection, path traversal, open redirect, CSV |
-| 3 | סנן פלט לפי הקשר | XSS: `innerHTML`, `dangerouslySetInnerHTML`, `javascript:` |
-| 4 | בדוק הרשאה לכל אובייקט | IDOR — `GET /doc/:id` בלי בדיקת בעלות |
-| 5 | סודות לא בצד לקוח | מפתחות ב-bundle, `.env` ב-git, `NEXT_PUBLIC_*_SECRET` |
-| 6 | "לא פרצו לך — דלף לך" | `res.json(user)`, `SELECT *`, exports ללא הגבלה |
-| 7 | הצפן הכל | md5/sha1 לסיסמאות, cookies בלי flags, `alg:none` |
-| 8 | שרשרת האספקה | אין lockfile, CDN בלי SRI, תלויות פרוצות |
-| 9 | הגן על ה-LLM שלך | prompt injection, פלט מודל ל-`innerHTML`/`exec` |
-| 10 | פרטיות ואחריות | stack traces ללקוח, PII בלוגים, אין rate-limit |
+| 1 | Don't trust the client | security decisions in JS, hidden fields, `if (isAdmin)` on the client |
+| 2 | Every input is hostile | SQL/NoSQL injection, path traversal, open redirect, CSV |
+| 3 | Encode output by context | XSS: `innerHTML`, `dangerouslySetInnerHTML`, `javascript:` |
+| 4 | Authorize every object | IDOR: `GET /doc/:id` with no ownership check |
+| 5 | No secrets client-side | keys in the bundle, `.env` in git, `NEXT_PUBLIC_*_SECRET` |
+| 6 | "You weren't hacked, you leaked" | `res.json(user)`, `SELECT *`, unbounded exports |
+| 7 | Encrypt everything | md5/sha1 for passwords, cookies without flags, `alg:none` |
+| 8 | The supply chain | no lockfile, CDN without SRI, vulnerable dependencies |
+| 9 | Guard your LLM | prompt injection, model output into `innerHTML`/`exec` |
+| 10 | Privacy and accountability | stack traces to the client, PII in logs, no rate-limit |
 
-## איך זה עובד
+## How it works
 
-1. `scripts/scan.sh` סורק דגלים אדומים (10 קטגוריות, ripgrep עם fallback ל-grep).
-   הפלט הוא **לידים, לא ממצאים**.
-2. הסוכן קורא כל ליד בהקשר — `innerHTML` על קבוע הוא לא ממצא.
-3. כל ממצא מקבל `קובץ:שורה`, **תרחיש ניצול קונקרטי**, ותיקון כדיף. אין תרחיש
-   ניצול = אין ממצא.
-4. פסק דין: עובר / עובר עם הסתייגויות / נכשל.
+1. `scripts/scan.sh` scans for red flags (10 categories, ripgrep with a grep
+   fallback). The output is **leads, not findings**.
+2. The agent reads every lead in context: `innerHTML` on a constant is not a
+   finding.
+3. Every finding gets `file:line`, a **concrete exploit scenario**, and a fix as
+   a diff. No exploit scenario means no finding.
+4. Verdict: pass / pass with reservations / fail.
 
 ```bash
 skills/ran-bar-zik/scripts/test_scan.sh
@@ -98,95 +100,102 @@ skills/ran-bar-zik/scripts/test_scan.sh
 # PASS [rg]:   12/12 sections detected, clean file silent
 ```
 
-הבדיקה רצה **תחת שני המנועים**. זו לא קפדנות מיותרת: `rg` (Rust regex) ו-`grep -E`
-(POSIX ERE) מקבלים דיאלקטים שונים, ובגרסה מוקדמת ביטוי אחד נדחה על-ידי `rg` בלבד —
-`2>/dev/null` בלע את השגיאה והקטגוריה כולה נראתה "נקייה". היום ביטוי שנדחה מודפס
-בקול (`PATTERN FAILED`) והסקריפט יוצא עם 2.
+The self-check runs **under both engines**. This is not needless rigor: `rg`
+(Rust regex) and `grep -E` (POSIX ERE) accept different dialects, and in an
+early version one expression was rejected by `rg` only, while `2>/dev/null`
+swallowed the error and the whole category looked "clean". Today a rejected
+expression is printed loudly (`PATTERN FAILED`) and the script exits with 2.
 
-## מבנה
+## Layout
 
 ```
 skills/ran-bar-zik/
-├── SKILL.md                      # הפעולה הראשית (אנגלית), תת-פקודות, פורמט הדוח
-├── SKILL_HE.md                   # הגרסה העברית המלאה
-├── metadata.json                 # מטא-דאטה ל-Skills IL (שם, תגיות, סוכנים נתמכים)
-├── evidence.json                 # מקורות מאמתים לכל טענה (אלקטור, OWASP, חוק הפרטיות)
-├── optimization-log.json         # יומן שיפורים של הסקיל
+├── SKILL.md                      # main action (English), subcommands, report format
+├── SKILL_HE.md                   # the full Hebrew version
+├── metadata.json                 # Skills IL metadata (name, tags, supported agents)
+├── evidence.json                 # verifying sources per claim (Elector, OWASP, Privacy Law)
+├── optimization-log.json         # the skill's improvement log
 ├── references/
-│   ├── commandments.md           # פירוט מלא + דוגמאות רע→טוב לכל דיבר
+│   ├── commandments.md           # full detail + bad->good examples per commandment
 │   ├── harden.md                 # CSP, headers, cookies, rate-limit, CI
-│   └── community-app.md          # דגשים לאפליקציית קהילה עם UGC ו-CSV
+│   └── community-app.md          # emphases for a community app with UGC and CSV
 └── scripts/
-    ├── scan.sh                   # סורק דגלים אדומים
-    └── test_scan.sh              # בדיקה עצמית
+    ├── scan.sh                   # red-flag scanner
+    └── test_scan.sh              # self-check
 
 adapters/
-└── security-rules.md             # גרסה ניידת לסוכנים שאינם Claude
+└── security-rules.md             # portable version for non-Claude agents
 ```
 
-## מגבלות
+## Limits
 
-`scan.sh` הוא grep, לא AST — הוא מפספס קוד מעורפל וזרימות בין-קבציות. לכן שלב
-הקריאה בהקשר הוא חובה ולא קישוט. הסקירה **אינה תחליף לבדיקת חדירה (pentest)**
-או לביקורת אבטחה מלאה.
+`scan.sh` is grep, not an AST: it misses obfuscated code and cross-file flows.
+That is why the read-in-context step is mandatory, not decoration. The review is
+**not a substitute for a penetration test** or a full security audit.
 
-## על מה זה מבוסס
+## What this is based on
 
-### מי זה רן בר-זיק
+### Who is Ran Bar-Zik
 
-רן בר-זיק הוא מפתח ווב ותיק, ארכיטקט תוכנה בכיר ב-CyberArk, ועיתונאי טכנולוגיה
-ב"דה מרקר" (קבוצת הארץ), ומרצה במכללת אונו.[^about][^wiki] מ-2008 הוא מפעיל את
-הבלוג "אינטרנט ישראל" — בלוג תכנות בעברית שמתעדכן שבועית[^about] — וכתב סדרת
-ספרי לימוד תכנות בעברית.[^books] הוא ידוע בעיקר כ-white-hat שחושף פרצות אבטחה
-ודליפות מידע בגופים ישראליים.[^wiki]
+Ran Bar-Zik is a veteran web developer, a senior software architect at CyberArk,
+a technology journalist at TheMarker (Haaretz Group), and a lecturer at Ono
+Academic College.[^about][^wiki] Since 2008 he has run the blog "Internet
+Israel", a Hebrew programming blog updated weekly,[^about] and he wrote a series
+of Hebrew programming textbooks.[^books] He is known mainly as a white-hat who
+exposes security holes and data leaks in Israeli organizations.[^wiki]
 
-### הבהרה: זו אינה רשימה רשמית
+### Disclaimer: this is not an official list
 
-**בר-זיק לא פרסם מסמך בשם "עשרת הדיברות".** חיפוש במקורות שלו לא מצא רשימה כזו.
-המספר עשר והניסוח כאן הם **סינתזה שלנו** של המסרים החוזרים בכתיבה ובחשיפות שלו,
-ארוזים כצ'ק-ליסט שסוכן יכול לסקור לפיו. הפרויקט אינו מסונף אליו, לא נבדק על ידו,
-ולא מייצג אותו. טעות בניסוח היא שלנו, לא שלו.
+**Bar-Zik did not publish a document called "the ten commandments".** A search
+of his sources found no such list. The number ten and the wording here are **our
+synthesis** of the recurring messages in his writing and disclosures, packaged
+as a checklist an agent can review against. This project is not affiliated with
+him, was not reviewed by him, and does not represent him. Any error in wording
+is ours, not his.
 
-### מה נגזר ישירות מעבודתו
+### Derived directly from his work
 
-| מקור | הדיבר שנגזר ממנו |
+| Source | Commandment derived |
 |---|---|
-| חשיפת אפליקציית **אלקטור** (2020): מאגר הבוחרים של הליכוד עם פרטי **6,453,254** ישראלים, שהיה נגיש דרך הדפדפן בלבד[^wiki][^elector] | **דיבר 1** — "כלי הפריצה הוא הדפדפן" |
-| **"לא פרצו לנו, רק דלף לנו — לקחים טכניים מפרשת אלקטור"**[^elector] | **דיבר 6** — הסלוגן, והתובנה שהיעדר עקבות תוקף אינו הוכחה שלא דלף מידע |
-| סדרת "קפטן אינטרנט" ב"דה מרקר": מערכת של **עיריית בית שמש** שחשפה אחוזי נכות ומידע על מחלות נפש של תושבים (2025)[^bs]; **400+ אלף מסמכים** עם מידע רפואי מאתר למכירת קנאביס (2024)[^cannabis] | **דיברות 6 ו-10** — מזעור חשיפה ו-PII ישראלי. אותה תבנית חוזרת: מידע רגיש נגיש לכל מי שיש לו דפדפן, בלי שאיש "פרץ" |
+| The **Elector** app disclosure (2020): the Likud voter database with details of **6,453,254** Israelis, reachable through the browser alone[^wiki][^elector] | **Commandment 1**, "the browser is the attacker's tool" |
+| **"We were not hacked, it just leaked, technical lessons from the Elector affair"**[^elector] | **Commandment 6**, the slogan, and the insight that the absence of attacker traces is not proof that data did not leak |
+| The "Captain Internet" series at TheMarker: a **Beit Shemesh municipality** system that exposed residents' disability percentages and mental-health information (2025)[^bs]; **400,000+ documents** with medical information from a cannabis-sales site (2024)[^cannabis] | **Commandments 6 and 10**, minimizing exposure and Israeli PII. The same pattern repeats: sensitive data reachable by anyone with a browser, with nobody "hacking" |
 
-מכאן גם הכלל בסקילג **"מהירות לא קונה אבטחה"**: אופטימיזציה שמעבירה נתונים או
-החלטות הרשאה לצד הלקוח היא רגרסיה, לא שיפור.
+Hence also the skill's rule **"speed doesn't buy security"**: an optimization
+that moves data or authorization decisions to the client is a regression, not an
+improvement.
 
-### מה נגזר מתקנים חיצוניים
+### Derived from external standards
 
-כדי שהצ'ק-ליסט לא יהיה דעה בלבד, שאר הדיברות ממפים לתקנים מקובלים:
+So the checklist is not opinion alone, the remaining commandments map to accepted
+standards:
 
-| דיבר | תקן |
+| Commandment | Standard |
 |---|---|
-| 4 | OWASP A01:2021 — Broken Access Control[^owasp-a01] |
-| 2, 3 | OWASP A03:2021 — Injection (כולל XSS)[^owasp] |
-| 7 | OWASP A02:2021 — Cryptographic Failures · A05 — Security Misconfiguration[^owasp] |
-| 8 | OWASP A06:2021 — Vulnerable and Outdated Components[^owasp] |
-| 10 | OWASP A09:2021 — Security Logging and Monitoring Failures[^owasp] |
-| 9 | OWASP Top 10 for LLM Applications — LLM01 Prompt Injection · LLM05 Improper Output Handling[^owasp-llm] |
-| 10 | תקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017[^privacy] — חובות בקרת גישה, הרשאות, תיעוד ודיווח על אירועי אבטחה |
+| 4 | OWASP A01:2021, Broken Access Control[^owasp-a01] |
+| 2, 3 | OWASP A03:2021, Injection (including XSS)[^owasp] |
+| 7 | OWASP A02:2021, Cryptographic Failures · A05, Security Misconfiguration[^owasp] |
+| 8 | OWASP A06:2021, Vulnerable and Outdated Components[^owasp] |
+| 10 | OWASP A09:2021, Security Logging and Monitoring Failures[^owasp] |
+| 9 | OWASP Top 10 for LLM Applications, LLM01 Prompt Injection · LLM05 Improper Output Handling[^owasp-llm] |
+| 10 | Protection of Privacy (Data Security) Regulations, 5777-2017[^privacy], access-control, authorization, documentation and breach-reporting duties |
 
-## מקורות
+## Sources
 
-[^about]: [אודות רן בר-זיק ואינטרנט ישראל](https://internet-israel.com/about/), internet-israel.com.
-[^wiki]: [רן בר-זיק](https://he.wikipedia.org/wiki/%D7%A8%D7%9F_%D7%91%D7%A8-%D7%96%D7%99%D7%A7), ויקיפדיה העברית.
-[^books]: [ספרי פיתוח בעברית](https://hebdevbook.com/), hebdevbook.com.
-[^elector]: רן בר-זיק, [לא פרצו לנו, רק דלף לנו — לקחים טכניים מפרשת אלקטור](https://internet-israel.com/פיתוח-אינטרנט/בניית-אתרי-אינטרנט-למפתחים/לא-פרצו-לנו-רק-דלף-לנו-לקחים-טכניים-מפר/), אינטרנט ישראל.
-[^bs]: רן בר-זיק, [אחוזי נכות ומחלות נפש: מערכת של עיריית בית שמש חשפה מידע רגיש על תושבים](https://www.themarker.com/captain-internet/2025-08-25/ty-article/.premium/00000198-e064-d9a7-add9-e2e51a110000), קפטן אינטרנט, TheMarker, 25.8.2025 (תוכן בתשלום).
-[^cannabis]: רן בר-זיק, [יותר מ-400 אלף מסמכים: פרטים אישיים ומידע רפואי רגיש דלפו מאתר לממכר קנאביס](https://www.themarker.com/captain-internet/2024-09-15/ty-article/.premium/00000191-e15d-d084-a5db-eb5f16230000), קפטן אינטרנט, TheMarker, 15.9.2024 (תוכן בתשלום).
+[^about]: [About Ran Bar-Zik and Internet Israel](https://internet-israel.com/about/), internet-israel.com.
+[^wiki]: [Ran Bar-Zik](https://he.wikipedia.org/wiki/%D7%A8%D7%9F_%D7%91%D7%A8-%D7%96%D7%99%D7%A7), Hebrew Wikipedia.
+[^books]: [Hebrew development books](https://hebdevbook.com/), hebdevbook.com.
+[^elector]: Ran Bar-Zik, [We were not hacked, it just leaked, technical lessons from the Elector affair](https://internet-israel.com/פיתוח-אינטרנט/בניית-אתרי-אינטרנט-למפתחים/לא-פרצו-לנו-רק-דלף-לנו-לקחים-טכניים-מפר/), Internet Israel (Hebrew).
+[^bs]: Ran Bar-Zik, [Disability percentages and mental illness: a Beit Shemesh municipality system exposed sensitive resident data](https://www.themarker.com/captain-internet/2025-08-25/ty-article/.premium/00000198-e064-d9a7-add9-e2e51a110000), Captain Internet, TheMarker, 25 Aug 2025 (paywalled, Hebrew).
+[^cannabis]: Ran Bar-Zik, [More than 400,000 documents: personal and sensitive medical data leaked from a cannabis-sales site](https://www.themarker.com/captain-internet/2024-09-15/ty-article/.premium/00000191-e15d-d084-a5db-eb5f16230000), Captain Internet, TheMarker, 15 Sep 2024 (paywalled, Hebrew).
 [^owasp]: [OWASP Top 10:2021](https://owasp.org/Top10/2021/), OWASP Foundation.
-[^owasp-a01]: [A01:2021 — Broken Access Control](https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/), OWASP Top 10:2021.
+[^owasp-a01]: [A01:2021, Broken Access Control](https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/), OWASP Top 10:2021.
 [^owasp-llm]: [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/), OWASP Gen AI Security Project.
-[^privacy]: [תקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017](https://www.nevo.co.il/law_html/law00/144811.htm), נבו. ראו גם [דף התקנות](https://www.gov.il/he/pages/data_security_regulation) באתר הרשות להגנת הפרטיות.
+[^privacy]: [Protection of Privacy (Data Security) Regulations, 5777-2017](https://www.nevo.co.il/law_html/law00/144811.htm), Nevo. See also the [regulations page](https://www.gov.il/he/pages/data_security_regulation) on the Privacy Protection Authority site.
 
-כל הקישורים נבדקו ב-21.7.2026.
+All links checked on 21 Jul 2026.
 
-## רישיון
+## License
 
-MIT — ראה [LICENSE](LICENSE). הסקילג הוא יישום עצמאי ואינו מסונף לרן בר-זיק.
+MIT, see [LICENSE](LICENSE). The skill is an independent implementation and is
+not affiliated with Ran Bar-Zik.
