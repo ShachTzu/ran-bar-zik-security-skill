@@ -110,8 +110,50 @@ section() { # $1 = label, $2 = pattern, $3 = optional exclude pattern
   HITS=$((HITS + 1))
 }
 
+# 0 · exposure - grep cannot see who is allowed to read your repo; git can.
+# Aug 2026, the IDF infantry-school case: the agent pushed the whole vibe-coded
+# project to a PUBLIC GitHub repo, and that is how the soldiers' details were
+# found. Stays quiet on an ordinary private repo with nothing sensitive tracked.
+#
+# ponytail: gh is the only definitive visibility answer. Without it we can only
+# flag committed data/secret files, so a public repo holding source alone is a
+# blind spot here - say so rather than implying the repo was cleared.
+exposure() { # $1 = target path
+  local dir="${1:-.}" vis="" out=""
+  [ -d "$dir" ] || dir=$(dirname "$dir")
+  git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
+
+  command -v gh >/dev/null 2>&1 &&
+    vis=$( (cd "$dir" && gh repo view --json visibility -q .visibility) 2>/dev/null )
+
+  # Tracked files that should not be in any repo, public or not. Deliberately
+  # narrow: matching every path containing "secret" flags the rotation doc and
+  # the .env.example, and a section that cries wolf stops being read.
+  local files
+  files=$(git -C "$dir" ls-files \
+    | grep -Ei '(^|/)\.env(\.[a-z]+)?$|\.(pem|p12|pfx|jks|keystore|sqlite3?|csv|xlsx?)$|(^|/)[^/]*credentials?[^/]*\.json$|dump[^/]*\.sql$' \
+    | grep -Eiv '\.env\.(example|sample|template|schema)$' \
+    | head -"$MAXHITS")
+
+  [ "$vis" = "PUBLIC" ] &&
+    out="repo visibility: PUBLIC - every tracked file here is world-readable"
+  if [ -n "$files" ]; then
+    out=$(printf '%s\n%s\ntracked data/secret files:\n%s' "$out" \
+      "$(git -C "$dir" remote -v | awk '{print $2}' | sort -u | sed 's/^/remote: /')" "$files")
+  fi
+  out=$(printf '%s\n' "$out" | grep -v '^[[:space:]]*$')
+  [ -z "$out" ] && return
+
+  printf '\n=== 0 · exposure - who can read this repo ===\n%s\n' "$out"
+  [ "$vis" = PUBLIC ] ||
+    printf 'visibility unknown (no gh answer) - confirm by hand that the remote is private\n'
+  HITS=$((HITS + 1))
+}
+
 HITS=0
 echo "ran-bar-zik pre-scan ($ENGINE) - leads only, verify each in context"
+
+exposure "${TARGET:-.}"
 
 section "1 · client-side trust" \
   '(type=.hidden.|localStorage\.(getItem|setItem)\([^)]*(role|admin|price|token)|(if|&&|\|\|)[^\n]{0,20}\b(isAdmin|is_admin)\b|role\s*[:=]\s*["'"'"'](admin|owner))'

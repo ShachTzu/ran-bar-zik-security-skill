@@ -36,7 +36,9 @@ concrete attack scenario + a fix (ideally a diff). Don't invent violations; not
 visible → ➖. Fix at the root (shared helper), not per-caller. An optimization
 that moves data or authorization to the client is a regression, not a speedup.
 Israeli PII (national ID/ת"ז, health, children, contact) is legal risk under the
-Privacy Protection Law — mark 🔴.
+Privacy Protection Law — mark 🔴. A system built mostly by an agent and
+holding real PII is 🔴 until proven otherwise: check who can read the repo and
+whether the API requires a login at all.
 
 1. **Don't trust the client.** Price, role, ownership, permission — server only.
    Client validation is UX.
@@ -53,10 +55,13 @@ Privacy Protection Law — mark 🔴.
    sensitive data, cookies Secure/HttpOnly/SameSite.
 8. **The supply chain is an attack surface.** Lockfile, pinned versions, SRI,
    minimize third-party, dependency scanning in CI.
-9. **Guard your LLM/agent.** Model output = untrusted input. Prompt injection,
-   input/output safeguards, least-privilege tools.
+9. **Guard your LLM/agent.** Model output = untrusted input: prompt injection,
+   input/output safeguards, least-privilege tools. The agent itself is attack
+   surface too - it pushes the project to a public repo, and "Make it secure"
+   in a prompt is not security.
 10. **Privacy, transparency, accountability.** Minimize PII, don't leak it in
-    errors/logs, deletion policy, rate-limiting, responsible disclosure.
+    errors/logs, deletion policy, rate-limiting, responsible disclosure with a
+    channel, an owner and a due date. "We'll close it quietly" is not a fix.
 
 End the report with: *"Reviewed against Ran Bar-Zik's ten commandments. An
 assistive review — not a substitute for a penetration test or a full security

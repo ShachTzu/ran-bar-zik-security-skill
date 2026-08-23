@@ -80,6 +80,16 @@
       "raw_snippet": "תקנות הגנת הפרטיות (אבטחת מידע), התשע\"ז-2017",
       "effective_date": "2018-05-08",
       "source_fetched_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "id": "idf-vibe-coding-2026",
+      "claim": "An IDF infantry-school course-documentation system built by vibe coding was reachable by anyone with a browser, and it was discovered because the language model pushed the whole project to a public GitHub repo; soldiers' details stayed exposed for a week after a quiet report to IDF information security, and were closed only once the press was involved. This grounds commandment 9's coverage of the agent itself as attack surface, commandment 10's requirement for a reporting channel with an owner and a due date, and scan.sh section 0 (repo exposure).",
+      "source_url": "https://x.com/barzik/status/2091446384402616399",
+      "raw_snippet": "\u05de\u05d5\u05d3\u05dc \u05d4\u05e9\u05e4\u05d4 \u05d4\u05d2\u05d3\u05d5\u05dc \u05d4\u05e2\u05dc\u05d4 \u05d1\u05d7\u05d5\u05db\u05de\u05ea\u05d5 \u05d4\u05e8\u05d1\u05d4 \u05d0\u05ea \u05db\u05dc \u05d4\u05de\u05e2\u05e8\u05db\u05ea \u05dc\u05d2\u05d9\u05d8\u05d4\u05d0\u05d1",
+      "effective_date": "2026-08-23",
+      "source_fetched_at": "2026-08-23T00:00:00Z",
+      "verified_via": "browser",
+      "notes": "Primary source is Bar-Zik's own thread on X, read in a browser. The linked TheMarker article (headline on the post card: the IDF was warned, ignored it for a week, and about 170 soldiers' details stayed exposed online) is paywalled and was not read; the ~170 figure comes from that headline, not from the thread."
     }
   ]
 }

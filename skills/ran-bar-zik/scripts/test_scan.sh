@@ -35,6 +35,11 @@ cat > "$FIX/index.html" <<'EOF'
 <script src="https://cdn.untrusted.net/lib.js"></script>
 EOF
 
+# A repo whose index tracks a .env - the exposure check reads git, not the disk.
+mkdir -p "$FIX/repo" && git -C "$FIX/repo" init -q
+echo 'API_KEY=whatever' > "$FIX/repo/.env"
+git -C "$FIX/repo" add -f .env
+
 cat > "$FIX/clean.js" <<'EOF'
 const el = document.createElement('div');
 el.textContent = greet(userName);
@@ -86,6 +91,15 @@ run_engine() { # $1 = label, $2 = PATH to run under
   case "$clean" in
     *"no red-flag patterns matched"*) ;;
     *) echo "FAIL [$1]: clean file produced leads:"; printf '%s\n' "$clean"; FAILED=1 ;;
+  esac
+
+  # The exposure check is git-driven, not grep-driven: it fires on a repo with a
+  # tracked .env and must stay silent on the non-repo fixtures above.
+  local exposed
+  exposed=$(PATH="$2" ./scan.sh "$FIX/repo" 2>&1)
+  case "$exposed" in
+    *"0 · exposure"*) ;;
+    *) echo "FAIL [$1]: no exposure lead for a repo tracking .env"; FAILED=1 ;;
   esac
 
   [ "$FAILED" -eq 0 ] && echo "PASS [$1]: ${#SECTIONS[@]}/${#SECTIONS[@]} sections detected, clean file silent"

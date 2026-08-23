@@ -33,6 +33,24 @@
           "references/ still contain Hebrew-first detail; an English pass on the references would widen reach further but is not required for the review flow, which is driven by SKILL.md."
         ]
       }
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-08-23",
+      "lessons": [
+        "New capability, not just new prose: scan.sh only ever read the text of code, so 'who is allowed to read this repo' was a total blind spot. Section 0 asks git instead of grep (visibility via gh, plus .env / key / csv / sqlite files tracked in the index), which is exactly the vector behind the August 2026 IDF infantry-school case.",
+        "A red-flag filter that cries wolf stops being read: the first version of section 0 matched every path containing 'secret' and flagged an .env.example and a key-rotation doc. Narrowed it to real data and credential files.",
+        "Commandment 9 now covers the agent itself and not only its output: the agent pushes projects to public repos, and 'Make it secure' in a prompt is an instruction, not a control.",
+        "Commandment 10 now treats a quiet fix as no fix: a report with no owner, ticket and due date is not handled, and the product needs a documented reporting channel.",
+        "Stated the ceiling instead of implying coverage: without gh, section 0 reports 'visibility unknown' and a public repo holding only source is still missed. Documented in both READMEs."
+      ],
+      "buckets": {
+        "persistent_fail": [],
+        "deferred": [
+          "Section 0 cannot determine repository visibility without the gh CLI. A git-remote-only heuristic (for example querying the forge API unauthenticated) is a candidate for a future cycle.",
+          "The root mirror and skills/ran-bar-zik/ copies are still synced by hand, and this cycle had to touch eight mirrored files. The CI drift-check deferred in 1.1.0 is now overdue."
+        ]
+      }
     }
   ]
 }
