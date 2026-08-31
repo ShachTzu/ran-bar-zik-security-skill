@@ -107,6 +107,9 @@ Verdict: "pass" / "pass with reservations" / "fail: fix before deploy".
   holding real PII: check first who can read the repo (the agent tends to push
   it public) and whether the API requires a login at all - before the
   commandments themselves. See the real case under commandment 9.
+- **Re-attack after the fix.** "Reported fixed" is not "verified fixed", and a
+  fix an agent produced is new code: review it in full, including whatever it
+  published on the way. See the real case under commandment 1.
 
 ## Subcommands
 
@@ -146,6 +149,8 @@ review - not a substitute for a penetration test or a full security audit."*
 
 1. **Don't trust the client.** Client-side validation is UX; the truth is on the
    server. Price, role, ownership and permission are decided on the server only.
+   Auth state kept on the client (`loggedIn: true` in sessionStorage) is not
+   auth.
 2. **Every input is hostile until proven otherwise.** Validate on the server:
    body, query, params, headers, cookies, filenames, CSV cells. Allow-list, not
    deny-list.

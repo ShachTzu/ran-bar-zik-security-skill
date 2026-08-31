@@ -72,7 +72,7 @@ rules file (table above). The `scan.sh` scanner runs standalone in any shell.*
 
 | # | הדיבר | תופס |
 |---|---|---|
-| 1 | לא תבטח בצד הלקוח | החלטות אבטחה ב-JS, שדות נסתרים, `if (isAdmin)` בלקוח |
+| 1 | לא תבטח בצד הלקוח | החלטות אבטחה ב-JS, שדות נסתרים, `if (isAdmin)` בלקוח, `loggedIn: true` ב-sessionStorage |
 | 2 | כל קלט הוא עוין | SQL/NoSQL injection, path traversal, open redirect, CSV |
 | 3 | סנן פלט לפי הקשר | XSS: `innerHTML`, `dangerouslySetInnerHTML`, `javascript:` |
 | 4 | בדוק הרשאה לכל אובייקט | IDOR — `GET /doc/:id` בלי בדיקת בעלות |

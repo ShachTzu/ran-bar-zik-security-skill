@@ -42,7 +42,10 @@
         "A red-flag filter that cries wolf stops being read: the first version of section 0 matched every path containing 'secret' and flagged an .env.example and a key-rotation doc. Narrowed it to real data and credential files.",
         "Commandment 9 now covers the agent itself and not only its output: the agent pushes projects to public repos, and 'Make it secure' in a prompt is an instruction, not a control.",
         "Commandment 10 now treats a quiet fix as no fix: a report with no owner, ticket and due date is not handled, and the product needs a documented reporting channel.",
-        "Stated the ceiling instead of implying coverage: without gh, section 0 reports 'visibility unknown' and a public repo holding only source is still missed. Documented in both READMEs."
+        "Stated the ceiling instead of implying coverage: without gh, section 0 reports 'visibility unknown' and a public repo holding only source is still missed. Documented in both READMEs.",
+        "Follow-up case, same affair (31 Aug 2026): told to 'add security', the agent built a login form that kept its result as loggedIn:true in sessionStorage. Section 1 of the scanner would not have caught it, so the pattern now covers session/localStorage auth flags, and test_scan.sh asserts that alternative on a fixture of its own rather than on the shared vulnerable file, where it could have rotted unnoticed.",
+        "Commandment 10 now says 'reported fixed' is not 'verified fixed': the same system was declared closed and a week later exposed both the old data and 996 new civilian records. Re-attack the same path after the fix, and escalate to the regulator when the owner does not close it.",
+        "A fix produced by an agent is new code, not a patch: it gets a full review, including whatever it published while fixing."
       ],
       "buckets": {
         "persistent_fail": [],

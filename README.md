@@ -73,7 +73,7 @@ The scanner `scripts/scan.sh` runs standalone in any shell, no agent at all:
 
 | # | Commandment | Catches |
 |---|---|---|
-| 1 | Don't trust the client | security decisions in JS, hidden fields, `if (isAdmin)` on the client |
+| 1 | Don't trust the client | security decisions in JS, hidden fields, `if (isAdmin)` on the client, `loggedIn: true` in sessionStorage |
 | 2 | Every input is hostile | SQL/NoSQL injection, path traversal, open redirect, CSV |
 | 3 | Encode output by context | XSS: `innerHTML`, `dangerouslySetInnerHTML`, `javascript:` |
 | 4 | Authorize every object | IDOR: `GET /doc/:id` with no ownership check |

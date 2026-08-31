@@ -38,10 +38,12 @@ that moves data or authorization to the client is a regression, not a speedup.
 Israeli PII (national ID/ת"ז, health, children, contact) is legal risk under the
 Privacy Protection Law — mark 🔴. A system built mostly by an agent and
 holding real PII is 🔴 until proven otherwise: check who can read the repo and
-whether the API requires a login at all.
+whether the API requires a login at all. After a fix, attack the same path
+again: "reported fixed" is not "verified fixed", and an agent's fix is new code.
 
 1. **Don't trust the client.** Price, role, ownership, permission — server only.
-   Client validation is UX.
+   Client validation is UX, and auth state kept on the client (`loggedIn: true`
+   in sessionStorage) is not auth.
 2. **Every input is hostile until proven otherwise.** Validate on the server:
    body, query, params, headers, cookies, filenames, CSV cells. Allow-list.
 3. **Encode output by context (XSS).** HTML/attr/JS/URL encoding, auto-escaping,

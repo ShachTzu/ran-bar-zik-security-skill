@@ -90,6 +90,16 @@
       "source_fetched_at": "2026-08-23T00:00:00Z",
       "verified_via": "browser",
       "notes": "Primary source is Bar-Zik's own thread on X, read in a browser. The linked TheMarker article (headline on the post card: the IDF was warned, ignored it for a week, and about 170 soldiers' details stayed exposed online) is paywalled and was not read; the ~170 figure comes from that headline, not from the thread."
+    },
+    {
+      "id": "idf-fake-login-2026",
+      "claim": "The follow-up to the same IDF case: told to 'add security', the agent produced a username/password form that stored the result as loggedIn:true in sessionStorage, so setting that value in devtools was the entire bypass, and the same round published further sites exposing 996 civilians' records (national ID, full name, phone, weapon ownership), their relation to soldiers, soldiers' names and photos. This grounds commandment 1's client-side-auth red flag, scan.sh section 1's storage-flag pattern, and commandment 10's rule that 'reported fixed' is not 'verified fixed'.",
+      "source_url": "https://x.com/barzik/status/2094364196016144630",
+      "raw_snippet": "\u05d4\u05d5\u05d0 \u05e9\u05dd session Storage \u05e2\u05dd loggedIn: true",
+      "effective_date": "2026-08-31",
+      "source_fetched_at": "2026-08-31T00:00:00Z",
+      "verified_via": "browser",
+      "notes": "Primary source is Bar-Zik's own thread on X, read in a browser. The linked TheMarker article is paywalled and was not read. The reporter escalated to the Privacy Protection Authority after the second exposure."
     }
   ]
 }

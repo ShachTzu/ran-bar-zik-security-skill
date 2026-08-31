@@ -155,8 +155,11 @@ echo "ran-bar-zik pre-scan ($ENGINE) - leads only, verify each in context"
 
 exposure "${TARGET:-.}"
 
+# The storage-flag alternative is the Aug 2026 IDF follow-up: told to "add
+# security", the agent built a login form and kept the result as loggedIn:true
+# in sessionStorage. Editing that value in devtools was the whole break-in.
 section "1 · client-side trust" \
-  '(type=.hidden.|localStorage\.(getItem|setItem)\([^)]*(role|admin|price|token)|(if|&&|\|\|)[^\n]{0,20}\b(isAdmin|is_admin)\b|role\s*[:=]\s*["'"'"'](admin|owner))'
+  '(type=.hidden.|(session|local)Storage[^;\n]{0,40}(loggedIn|logged_in|isLoggedIn|isAuthenticated|authenticated|isAuth)|localStorage\.(getItem|setItem)\([^)]*(role|admin|price|token)|(if|&&|\|\|)[^\n]{0,20}\b(isAdmin|is_admin)\b|role\s*[:=]\s*["'"'"'](admin|owner))'
 
 # No quote chars in this pattern on purpose - a quote class here has to survive
 # three levels of shell quoting, and getting it wrong silently kills the whole
