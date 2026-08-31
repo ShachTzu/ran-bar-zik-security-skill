@@ -23,4 +23,4 @@ jobs:
             **/scripts/*.sh
             adapters/security-rules.md
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
