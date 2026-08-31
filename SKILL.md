@@ -103,6 +103,13 @@ Verdict: "pass" / "pass with reservations" / "fail: fix before deploy".
 - **Israeli PII** (national ID / ת"ז, health, children, contact details) is
   regulated under the Privacy Protection Law - exposure is legal risk, not just
   a bug. Mark 🔴.
+- **Vibe coding + personal data = 🔴.** A system built mostly by an agent and
+  holding real PII: check first who can read the repo (the agent tends to push
+  it public) and whether the API requires a login at all - before the
+  commandments themselves. See the real case under commandment 9.
+- **Re-attack after the fix.** "Reported fixed" is not "verified fixed", and a
+  fix an agent produced is new code: review it in full, including whatever it
+  published on the way. See the real case under commandment 1.
 
 ## Subcommands
 
@@ -142,6 +149,8 @@ review - not a substitute for a penetration test or a full security audit."*
 
 1. **Don't trust the client.** Client-side validation is UX; the truth is on the
    server. Price, role, ownership and permission are decided on the server only.
+   Auth state kept on the client (`loggedIn: true` in sessionStorage) is not
+   auth.
 2. **Every input is hostile until proven otherwise.** Validate on the server:
    body, query, params, headers, cookies, filenames, CSV cells. Allow-list, not
    deny-list.
@@ -159,11 +168,14 @@ review - not a substitute for a penetration test or a full security audit."*
    sensitive data, cookies with Secure/HttpOnly/SameSite.
 8. **The supply chain is an attack surface.** Lockfile, pinned versions, SRI,
    minimize third-party, dependency scanning in CI.
-9. **Guard your LLM/agent.** Model output = untrusted input. Prompt injection,
-   safeguards on input and output, least-privilege tool permissions.
+9. **Guard your LLM/agent.** Model output = untrusted input: prompt injection,
+   safeguards on input and output, least-privilege tool permissions. The agent
+   itself is attack surface too - it pushes the project to a public repo, and
+   "Make it secure" in a prompt is not security.
 10. **Privacy, transparency and accountability.** Minimize PII, don't leak it in
-    errors/logs, deletion policy, rate-limiting, and plan for responsible
-    disclosure.
+    errors/logs, deletion policy, rate-limiting, and responsible disclosure - a
+    reporting channel, an owner and a due date. "We'll close it quietly" is not
+    a fix.
 
 Files: `SKILL_HE.md` (Hebrew version) · `references/commandments.md` (detail +
 examples) · `references/harden.md` (defense layers) · `references/community-app.md`

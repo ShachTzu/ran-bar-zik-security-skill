@@ -72,7 +72,7 @@ rules file (table above). The `scan.sh` scanner runs standalone in any shell.*
 
 | # | הדיבר | תופס |
 |---|---|---|
-| 1 | לא תבטח בצד הלקוח | החלטות אבטחה ב-JS, שדות נסתרים, `if (isAdmin)` בלקוח |
+| 1 | לא תבטח בצד הלקוח | החלטות אבטחה ב-JS, שדות נסתרים, `if (isAdmin)` בלקוח, `loggedIn: true` ב-sessionStorage |
 | 2 | כל קלט הוא עוין | SQL/NoSQL injection, path traversal, open redirect, CSV |
 | 3 | סנן פלט לפי הקשר | XSS: `innerHTML`, `dangerouslySetInnerHTML`, `javascript:` |
 | 4 | בדוק הרשאה לכל אובייקט | IDOR — `GET /doc/:id` בלי בדיקת בעלות |
@@ -80,13 +80,14 @@ rules file (table above). The `scan.sh` scanner runs standalone in any shell.*
 | 6 | "לא פרצו לך — דלף לך" | `res.json(user)`, `SELECT *`, exports ללא הגבלה |
 | 7 | הצפן הכל | md5/sha1 לסיסמאות, cookies בלי flags, `alg:none` |
 | 8 | שרשרת האספקה | אין lockfile, CDN בלי SRI, תלויות פרוצות |
-| 9 | הגן על ה-LLM שלך | prompt injection, פלט מודל ל-`innerHTML`/`exec` |
-| 10 | פרטיות ואחריות | stack traces ללקוח, PII בלוגים, אין rate-limit |
+| 9 | הגן על ה-LLM/הסוכן שלך | prompt injection, פלט מודל ל-`innerHTML`/`exec`, סוכן שדוחף את הפרויקט לריפו ציבורי |
+| 10 | פרטיות ואחריות | stack traces ללקוח, PII בלוגים, אין rate-limit, אין ערוץ דיווח ובעלים |
 
 ## איך זה עובד
 
-1. `scripts/scan.sh` סורק דגלים אדומים (10 קטגוריות, ripgrep עם fallback ל-grep).
-   הפלט הוא **לידים, לא ממצאים**.
+1. `scripts/scan.sh` סורק דגלים אדומים (10 הדיברות, ripgrep עם fallback ל-grep),
+   ולפניהם שואל את git מי בכלל רשאי לקרוא את הריפו - נראות דרך `gh`, וקבצי
+   `.env`/מפתחות/`csv`/`sqlite` שנמצאים ב-index. הפלט הוא **לידים, לא ממצאים**.
 2. הסוכן קורא כל ליד בהקשר — `innerHTML` על קבוע הוא לא ממצא.
 3. כל ממצא מקבל `קובץ:שורה`, **תרחיש ניצול קונקרטי**, ותיקון כדיף. אין תרחיש
    ניצול = אין ממצא.
@@ -129,6 +130,10 @@ adapters/
 `scan.sh` הוא grep, לא AST — הוא מפספס קוד מעורפל וזרימות בין-קבציות. לכן שלב
 הקריאה בהקשר הוא חובה ולא קישוט. הסקירה **אינה תחליף לבדיקת חדירה (pentest)**
 או לביקורת אבטחה מלאה.
+
+בדיקת החשיפה (סעיף 0) יודעת לומר "פומבי" רק כאשר `gh` מותקן ומחובר; בלעדיו היא
+מדווחת "visibility unknown" ומסתמכת על קבצים שנמצאים ב-index - ריפו פומבי שמכיל
+קוד בלבד יישאר נקודה עיוורת. אל תקרא לזה "נבדק".
 
 ## על מה זה מבוסס
 

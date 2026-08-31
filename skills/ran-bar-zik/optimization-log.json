@@ -33,6 +33,30 @@
           "references/ still contain Hebrew-first detail; an English pass on the references would widen reach further but is not required for the review flow, which is driven by SKILL.md."
         ]
       }
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-08-23",
+      "lessons": [
+        "New capability, not just new prose: scan.sh only ever read the text of code, so 'who is allowed to read this repo' was a total blind spot. Section 0 asks git instead of grep (visibility via gh, plus .env / key / csv / sqlite files tracked in the index), which is exactly the vector behind the August 2026 IDF infantry-school case.",
+        "A red-flag filter that cries wolf stops being read: the first version of section 0 matched every path containing 'secret' and flagged an .env.example and a key-rotation doc. Narrowed it to real data and credential files.",
+        "Commandment 9 now covers the agent itself and not only its output: the agent pushes projects to public repos, and 'Make it secure' in a prompt is an instruction, not a control.",
+        "Commandment 10 now treats a quiet fix as no fix: a report with no owner, ticket and due date is not handled, and the product needs a documented reporting channel.",
+        "Stated the ceiling instead of implying coverage: without gh, section 0 reports 'visibility unknown' and a public repo holding only source is still missed. Documented in both READMEs.",
+        "Follow-up case, same affair (31 Aug 2026): told to 'add security', the agent built a login form that kept its result as loggedIn:true in sessionStorage. Section 1 of the scanner would not have caught it, so the pattern now covers session/localStorage auth flags, and test_scan.sh asserts that alternative on a fixture of its own rather than on the shared vulnerable file, where it could have rotted unnoticed.",
+        "Commandment 10 now says 'reported fixed' is not 'verified fixed': the same system was declared closed and a week later exposed both the old data and 996 new civilian records. Re-attack the same path after the fix, and escalate to the regulator when the owner does not close it.",
+        "A fix produced by an agent is new code, not a patch: it gets a full review, including whatever it published while fixing.",
+        "Release red-team on our own scanner: section 0 prints git remotes, and a remote URL can carry a token (https://user:token@host/...), so the scanner would have echoed a live credential into a CI log. Credentials are stripped before printing, with a fixture whose remote carries a token asserting it never appears in the output.",
+        "Supply chain, applied to ourselves: the release attested SKILL.md, SKILL_HE.md and metadata.json while scan.sh, the one file users actually execute, shipped unsigned. The attestation now covers scripts, references and the adapter.",
+        "The manual mirror sync deferred in 1.1.0 is now enforced in CI: a diff step fails the build when the root copy and skills/ran-bar-zik/ disagree, so two different skills can never be published under one tag."
+      ],
+      "buckets": {
+        "persistent_fail": [],
+        "deferred": [
+          "Section 0 cannot determine repository visibility without the gh CLI. A git-remote-only heuristic (for example querying the forge API unauthenticated) is a candidate for a future cycle.",
+          "The root mirror and skills/ran-bar-zik/ copies are still synced by hand, and this cycle had to touch eight mirrored files. The CI drift-check deferred in 1.1.0 is now overdue."
+        ]
+      }
     }
   ]
 }

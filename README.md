@@ -73,7 +73,7 @@ The scanner `scripts/scan.sh` runs standalone in any shell, no agent at all:
 
 | # | Commandment | Catches |
 |---|---|---|
-| 1 | Don't trust the client | security decisions in JS, hidden fields, `if (isAdmin)` on the client |
+| 1 | Don't trust the client | security decisions in JS, hidden fields, `if (isAdmin)` on the client, `loggedIn: true` in sessionStorage |
 | 2 | Every input is hostile | SQL/NoSQL injection, path traversal, open redirect, CSV |
 | 3 | Encode output by context | XSS: `innerHTML`, `dangerouslySetInnerHTML`, `javascript:` |
 | 4 | Authorize every object | IDOR: `GET /doc/:id` with no ownership check |
@@ -81,13 +81,15 @@ The scanner `scripts/scan.sh` runs standalone in any shell, no agent at all:
 | 6 | "You weren't hacked, you leaked" | `res.json(user)`, `SELECT *`, unbounded exports |
 | 7 | Encrypt everything | md5/sha1 for passwords, cookies without flags, `alg:none` |
 | 8 | The supply chain | no lockfile, CDN without SRI, vulnerable dependencies |
-| 9 | Guard your LLM | prompt injection, model output into `innerHTML`/`exec` |
-| 10 | Privacy and accountability | stack traces to the client, PII in logs, no rate-limit |
+| 9 | Guard your LLM/agent | prompt injection, model output into `innerHTML`/`exec`, an agent pushing the project to a public repo |
+| 10 | Privacy and accountability | stack traces to the client, PII in logs, no rate-limit, no reporting channel or owner |
 
 ## How it works
 
-1. `scripts/scan.sh` scans for red flags (10 categories, ripgrep with a grep
-   fallback). The output is **leads, not findings**.
+1. `scripts/scan.sh` scans for red flags (the ten commandments, ripgrep with a
+   grep fallback), and before them asks git who is even allowed to read the
+   repo: visibility via `gh`, plus `.env`/key/`csv`/`sqlite` files sitting in
+   the index. The output is **leads, not findings**.
 2. The agent reads every lead in context: `innerHTML` on a constant is not a
    finding.
 3. Every finding gets `file:line`, a **concrete exploit scenario**, and a fix as
@@ -132,6 +134,11 @@ adapters/
 `scan.sh` is grep, not an AST: it misses obfuscated code and cross-file flows.
 That is why the read-in-context step is mandatory, not decoration. The review is
 **not a substitute for a penetration test** or a full security audit.
+
+The exposure check (section 0) can only say "public" when `gh` is installed and
+authenticated. Without it the section reports "visibility unknown" and falls
+back to what is tracked in the index, so a public repo holding source alone
+stays a blind spot. Don't call that "checked".
 
 ## What this is based on
 

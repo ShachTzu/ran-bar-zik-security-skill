@@ -35,6 +35,21 @@ cat > "$FIX/index.html" <<'EOF'
 <script src="https://cdn.untrusted.net/lib.js"></script>
 EOF
 
+# Client-side auth on its own: section 1 has several alternatives, and asserting
+# the section label on the big fixture would let this one rot unnoticed.
+cat > "$FIX/fakelogin.js" <<'EOF'
+if (u === 'admin' && p === '1234') sessionStorage.setItem('loggedIn', 'true');
+EOF
+
+# A repo whose index tracks a .env - the exposure check reads git, not the disk.
+mkdir -p "$FIX/repo" && git -C "$FIX/repo" init -q
+echo 'API_KEY=whatever' > "$FIX/repo/.env"
+git -C "$FIX/repo" add -f .env
+# A remote with a token in the URL: the scan prints remotes, and a scanner that
+# echoes a credential into a CI log is the leak it exists to find.
+git -C "$FIX/repo" remote add origin \
+  'https://user:s3cr3t-token@github.example.com/acme/private.git'
+
 cat > "$FIX/clean.js" <<'EOF'
 const el = document.createElement('div');
 el.textContent = greet(userName);
@@ -86,6 +101,25 @@ run_engine() { # $1 = label, $2 = PATH to run under
   case "$clean" in
     *"no red-flag patterns matched"*) ;;
     *) echo "FAIL [$1]: clean file produced leads:"; printf '%s\n' "$clean"; FAILED=1 ;;
+  esac
+
+  local fake
+  fake=$(PATH="$2" ./scan.sh "$FIX/fakelogin.js" 2>&1)
+  case "$fake" in
+    *"1 · client-side trust"*) ;;
+    *) echo "FAIL [$1]: no lead for auth state kept in sessionStorage"; FAILED=1 ;;
+  esac
+
+  # The exposure check is git-driven, not grep-driven: it fires on a repo with a
+  # tracked .env and must stay silent on the non-repo fixtures above.
+  local exposed
+  exposed=$(PATH="$2" ./scan.sh "$FIX/repo" 2>&1)
+  case "$exposed" in
+    *"0 · exposure"*) ;;
+    *) echo "FAIL [$1]: no exposure lead for a repo tracking .env"; FAILED=1 ;;
+  esac
+  case "$exposed" in
+    *"s3cr3t-token"*) echo "FAIL [$1]: printed a credential from the remote URL"; FAILED=1 ;;
   esac
 
   [ "$FAILED" -eq 0 ] && echo "PASS [$1]: ${#SECTIONS[@]}/${#SECTIONS[@]} sections detected, clean file silent"

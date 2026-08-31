@@ -19,5 +19,8 @@ jobs:
             **/SKILL.md
             **/SKILL_HE.md
             **/metadata.json
+            **/references/*.md
+            **/scripts/*.sh
+            adapters/security-rules.md
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
