@@ -17,6 +17,12 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ripgrep
       - name: Self-check (both engines)
         run: bash skills/ran-bar-zik/scripts/test_scan.sh
+      - name: Root mirror must match skills/ran-bar-zik
+        run: |
+          for f in SKILL.md SKILL_HE.md metadata.json evidence.json optimization-log.json; do
+            diff -q "$f" "skills/ran-bar-zik/$f" || {
+              echo "mirror drift in $f: the two published copies differ"; exit 1; }
+          done
       - name: Shellcheck
         run: |
           sudo apt-get install -y shellcheck

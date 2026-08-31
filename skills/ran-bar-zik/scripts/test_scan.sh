@@ -45,6 +45,10 @@ EOF
 mkdir -p "$FIX/repo" && git -C "$FIX/repo" init -q
 echo 'API_KEY=whatever' > "$FIX/repo/.env"
 git -C "$FIX/repo" add -f .env
+# A remote with a token in the URL: the scan prints remotes, and a scanner that
+# echoes a credential into a CI log is the leak it exists to find.
+git -C "$FIX/repo" remote add origin \
+  'https://user:s3cr3t-token@github.example.com/acme/private.git'
 
 cat > "$FIX/clean.js" <<'EOF'
 const el = document.createElement('div');
@@ -113,6 +117,9 @@ run_engine() { # $1 = label, $2 = PATH to run under
   case "$exposed" in
     *"0 · exposure"*) ;;
     *) echo "FAIL [$1]: no exposure lead for a repo tracking .env"; FAILED=1 ;;
+  esac
+  case "$exposed" in
+    *"s3cr3t-token"*) echo "FAIL [$1]: printed a credential from the remote URL"; FAILED=1 ;;
   esac
 
   [ "$FAILED" -eq 0 ] && echo "PASS [$1]: ${#SECTIONS[@]}/${#SECTIONS[@]} sections detected, clean file silent"

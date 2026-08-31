@@ -139,7 +139,8 @@ exposure() { # $1 = target path
     out="repo visibility: PUBLIC - every tracked file here is world-readable"
   if [ -n "$files" ]; then
     out=$(printf '%s\n%s\ntracked data/secret files:\n%s' "$out" \
-      "$(git -C "$dir" remote -v | awk '{print $2}' | sort -u | sed 's/^/remote: /')" "$files")
+      "$(git -C "$dir" remote -v | awk '{print $2}' | sort -u |
+          sed -E 's#//[^/@]*@#//<credentials-stripped>@#; s/^/remote: /')" "$files")
   fi
   out=$(printf '%s\n' "$out" | grep -v '^[[:space:]]*$')
   [ -z "$out" ] && return
